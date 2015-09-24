@@ -9,21 +9,27 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.Calendar;
+
 public class MainActivity extends AppCompatActivity {
 
     static final int NUMBER_OF_WEEKS = 52;
 
     private WeekPageAdapter mWeekPageAdapter;
     private ViewPager mViewPager;
+    private Calendar mCalendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mCalendar = Calendar.getInstance();
+        int firstPage = mCalendar.get(Calendar.WEEK_OF_YEAR);
         mWeekPageAdapter = new WeekPageAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager)findViewById(R.id.viewpager);
         mViewPager.setAdapter(mWeekPageAdapter);
+        mViewPager.setCurrentItem(firstPage);
 
     }
 

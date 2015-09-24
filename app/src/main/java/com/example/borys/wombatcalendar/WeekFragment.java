@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -18,6 +19,8 @@ public class WeekFragment extends Fragment {
 
     private RecyclerView mWeekRecyclerView;
     private List<String> mDays;
+    private Calendar mCalendar;
+    private int num;
 
     static WeekFragment newInstance(int num) {
         WeekFragment f = new WeekFragment();
@@ -32,8 +35,9 @@ public class WeekFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mDays= new ArrayList<>(Arrays.asList("pon","wt","śr","czw","pt","sob","ndz"));
+        mCalendar = Calendar.getInstance();
+        mCalendar.setMinimalDaysInFirstWeek(1);
+        mDays= new ArrayList<>(Arrays.asList("poniedziałek","wtorek","środa","czwartek","piątek","sobota","niedziela"));
     }
 
     @Override
@@ -43,7 +47,7 @@ public class WeekFragment extends Fragment {
         //find rootView with RecyclerView
         View rootView =inflater.inflate(R.layout.fragment_week, container, false);
         //get data from Pager
-        int num = getArguments().getInt("num");
+        num = getArguments().getInt("num");
         //create Grid Recycler View
         mWeekRecyclerView = (RecyclerView)rootView.findViewById(R.id.week_recycler_view);
         mWeekRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
@@ -83,8 +87,9 @@ public class WeekFragment extends Fragment {
         @Override
         public void onBindViewHolder(DayOfWeekViewHolder holder, int position) {
             //bind data from mDays list
-            String day = mDays.get(position);
-            holder.bindDay(day);
+            //int day = mCalendar.get(Calendar.DAY_OF_MONTH) + position;
+            String dayName = mDays.get(position);
+            holder.bindDay(dayName + num);
         }
 
         @Override
