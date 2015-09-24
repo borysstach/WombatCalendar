@@ -18,9 +18,10 @@ import java.util.List;
 public class WeekFragment extends Fragment {
 
     private RecyclerView mWeekRecyclerView;
-    private List<String> mDays;
+    private List<String> mDaysStrings;
+    private List<String> mDaysCalendarStrings;
     private Calendar mCalendar;
-    private int num;
+    private int mNumberOfWeek;
 
     static WeekFragment newInstance(int num) {
         WeekFragment f = new WeekFragment();
@@ -35,9 +36,14 @@ public class WeekFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //get data from Pager
+        mNumberOfWeek = getArguments().getInt("num");
         mCalendar = Calendar.getInstance();
-        mCalendar.setMinimalDaysInFirstWeek(1);
-        mDays= new ArrayList<>(Arrays.asList("poniedziałek","wtorek","środa","czwartek","piątek","sobota","niedziela"));
+        //set calendar to current showing week
+        mCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        mCalendar.set(Calendar.WEEK_OF_YEAR, mNumberOfWeek);
+
+        mDaysStrings= new ArrayList<>(Arrays.asList("poniedziałek","wtorek","środa","czwartek","piątek","sobota","niedziela"));
     }
 
     @Override
@@ -46,8 +52,6 @@ public class WeekFragment extends Fragment {
 
         //find rootView with RecyclerView
         View rootView =inflater.inflate(R.layout.fragment_week, container, false);
-        //get data from Pager
-        num = getArguments().getInt("num");
         //create Grid Recycler View
         mWeekRecyclerView = (RecyclerView)rootView.findViewById(R.id.week_recycler_view);
         mWeekRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
@@ -87,14 +91,14 @@ public class WeekFragment extends Fragment {
         @Override
         public void onBindViewHolder(DayOfWeekViewHolder holder, int position) {
             //bind data from mDays list
-            //int day = mCalendar.get(Calendar.DAY_OF_MONTH) + position;
-            String dayName = mDays.get(position);
-            holder.bindDay(dayName + num);
+            int day = mCalendar.get(Calendar.DAY_OF_MONTH) + position;
+            String dayName = mDaysStrings.get(position);
+            holder.bindDay(dayName+ "  " + day );
         }
 
         @Override
         public int getItemCount() {
-            return mDays.size();
+            return mDaysStrings.size();
         }
     }
 }
