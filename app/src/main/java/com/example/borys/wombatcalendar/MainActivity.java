@@ -13,7 +13,8 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
-    static final int NUMBER_OF_WEEKS = 52;
+    public static final int MAX_PAGE = 200;
+    public static int thisWeek;
 
     private WeekPageAdapter mWeekPageAdapter;
     private ViewPager mViewPager;
@@ -25,11 +26,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mCalendar = Calendar.getInstance();
-        int firstPage = mCalendar.get(Calendar.WEEK_OF_YEAR);
+        thisWeek = mCalendar.get(Calendar.WEEK_OF_YEAR);
         mWeekPageAdapter = new WeekPageAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager)findViewById(R.id.viewpager);
         mViewPager.setAdapter(mWeekPageAdapter);
-        mViewPager.setCurrentItem(firstPage);
+        mViewPager.setCurrentItem(MAX_PAGE/2);
 
     }
 
@@ -69,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return NUMBER_OF_WEEKS;
+            return MAX_PAGE;
         }
     }
 }
