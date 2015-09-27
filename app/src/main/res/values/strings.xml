@@ -1,9 +1,33 @@
 <resources>
-    <string name="app_name">WombatCalendar</string>
+    <string name="app_name">Wombat Calendar</string>
+
+    <string name="monday">poniedziałek</string>
+    <string name="tuesday">wtorek</string>
+    <string name="wednesday">środa</string>
+    <string name="thursday">czwartek</string>
+    <string name="friday">piątek</string>
+    <string name="saturday">sobota</string>
+    <string name="sunday">niedziela</string>
+
+    <string name="january">styczeń</string>
+    <string name="february">luty</string>
+    <string name="march">marzec</string>
+    <string name="april">kwiecien</string>
+    <string name="may">maj</string>
+    <string name="june">czerwiec</string>
+    <string name="julay">lipiec</string>
+    <string name="august">sierpień</string>
+    <string name="september">wrzesień</string>
+    <string name="october">październik</string>
+    <string name="november">listopad</string>
+    <string name="december">grudzień</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_day">DayActivity</string>
 
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

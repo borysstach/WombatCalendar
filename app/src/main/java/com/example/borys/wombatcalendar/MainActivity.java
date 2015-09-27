@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         mWeekPageAdapter = new WeekPageAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager)findViewById(R.id.viewpager);
         mViewPager.setAdapter(mWeekPageAdapter);
-        mViewPager.setCurrentItem(MAX_PAGE/2);
+        mViewPager.setCurrentItem(MAX_PAGE / 2);
 
     }
 
@@ -72,6 +72,11 @@ public class MainActivity extends AppCompatActivity {
         public int getCount() {
             return MAX_PAGE;
         }
+    }
+    public void setActionBarTitle(String title) {
+        assert getSupportActionBar() != null;
+        getSupportActionBar().setTitle(title);
+        this.invalidateOptionsMenu();
     }
 }
 

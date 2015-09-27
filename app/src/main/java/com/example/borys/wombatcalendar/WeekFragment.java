@@ -18,10 +18,9 @@ import java.util.List;
 public class WeekFragment extends Fragment {
 
     private int mCurrentWeek;
-    private int mCurrentYear;
     private RecyclerView mWeekRecyclerView;
     private List<String> mDaysStrings;
-    private List<Integer> mDaysCalendar;
+    private List<String> mMonthStrings;
     private Calendar mCalendar;
     private int mNumberOfFragment;
 
@@ -40,10 +39,30 @@ public class WeekFragment extends Fragment {
         super.onCreate(savedInstanceState);
         //get data from Pager
         mNumberOfFragment = getArguments().getInt("num");
-        mCalendar = Calendar.getInstance();
+        mDaysStrings = new ArrayList<>(Arrays.asList(
+                getString(R.string.monday),
+                getString(R.string.tuesday),
+                getString(R.string.wednesday),
+                getString(R.string.thursday),
+                getString(R.string.friday),
+                getString(R.string.saturday),
+                getString(R.string.sunday)));
+
+        mMonthStrings = new ArrayList<>(Arrays.asList(
+                getString(R.string.january),
+                getString(R.string.february),
+                getString(R.string.march),
+                getString(R.string.april),
+                getString(R.string.may),
+                getString(R.string.june),
+                getString(R.string.julay),
+                getString(R.string.august),
+                getString(R.string.september),
+                getString(R.string.october),
+                getString(R.string.november),
+                getString(R.string.december)));
         setData();
-        mDaysStrings = new ArrayList<>(Arrays.asList("poniedziałek", "wtorek", "środa", "czwartek", "piątek", "sobota", "niedziela"));
-        mDaysCalendar = new ArrayList<>(Arrays.asList(Calendar.MONDAY, Calendar.TUESDAY, Calendar.WEDNESDAY, Calendar.THURSDAY, Calendar.FRIDAY, Calendar.SATURDAY, Calendar.SUNDAY));
+
     }
 
     @Override
@@ -97,7 +116,7 @@ public class WeekFragment extends Fragment {
             }
             int day = mCalendar.get(Calendar.DAY_OF_MONTH);
             String dayName = mDaysStrings.get(position);
-            holder.bindDay(dayName + "  " + day + "  " + mCalendar.get(Calendar.YEAR) + "  " + mCalendar.get(Calendar.WEEK_OF_YEAR));
+            holder.bindDay(dayName + "  " + day);
 
         }
 
@@ -107,14 +126,18 @@ public class WeekFragment extends Fragment {
         }
     }
 
+
+
     /**
      * Method set data to current week
      */
     public void setData() {
         //set calendar to current showing week
+        mCalendar = Calendar.getInstance();
         mCurrentWeek = MainActivity.thisWeek + (mNumberOfFragment - MainActivity.MAX_PAGE / 2);
         mCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
         mCalendar.add(Calendar.WEEK_OF_YEAR, (mCurrentWeek - MainActivity.thisWeek));
+        ((MainActivity)getActivity()).setActionBarTitle(mMonthStrings.get(mCalendar.get(Calendar.MONTH)));
     }
 }
 
