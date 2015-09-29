@@ -82,16 +82,23 @@ public class WeekFragment extends Fragment {
     public class DayOfWeekViewHolder extends RecyclerView.ViewHolder {
 
         private TextView mDayName;
+        private TextView mEventTitle;
 
         public DayOfWeekViewHolder(View itemView) {
             super(itemView);
             //find view
             mDayName = (TextView) itemView.findViewById(R.id.day_name_text_view);
+            mEventTitle = (TextView) itemView.findViewById(R.id.event_text_view);
         }
 
         public void bindDay(String dayName) {
             //bind data to view
             mDayName.setText(dayName);
+        }
+
+        public void bindEvent(String event) {
+            mEventTitle.setText(event);
+            //mEventTitle.setTextColor(Color.parseColor(color));
         }
     }
 
@@ -114,9 +121,27 @@ public class WeekFragment extends Fragment {
                 //add one day in next day after monday
             mCalendar.add(Calendar.DAY_OF_WEEK, 1);
             }
+
             int day = mCalendar.get(Calendar.DAY_OF_MONTH);
             String dayName = mDaysStrings.get(position);
             holder.bindDay(dayName + "  " + day);
+
+
+            CalendarDataSource readerEvents = new CalendarDataSource(getContext());
+            Calendar testCalendarStart = mCalendar;
+            testCalendarStart.set(testCalendarStart.get(Calendar.YEAR), testCalendarStart.get(Calendar.MONTH), testCalendarStart.get(Calendar.DAY_OF_MONTH), 0, 1);
+            Calendar testCalendarStop = mCalendar;
+            testCalendarStart.set(testCalendarStart.get(Calendar.YEAR), testCalendarStart.get(Calendar.MONTH), testCalendarStart.get(Calendar.DAY_OF_MONTH), 23, 59);
+            List<EventData> events = readerEvents.getEventsFromDay(testCalendarStart, testCalendarStop);
+//            String testing = "data start: "
+//                    + testCalendarStop.get(Calendar.YEAR) + ":"
+//                    + testCalendarStop.get(Calendar.MONTH) + ":"
+//                    + testCalendarStop.get(Calendar.DAY_OF_MONTH) + "\n"
+//                    + testCalendarStop.get(Calendar.HOUR)+ ":"
+//                    + testCalendarStop.get(Calendar.MINUTE);
+            if (!events.isEmpty()){
+            holder.bindEvent(events.get(0).getTitle());}
+
 
         }
 

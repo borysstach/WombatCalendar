@@ -114,12 +114,12 @@ public class CalendarDataSource {
                                 eventStringIds,
                                 null);
         //convert data from cursor
-        if (cursor.moveToFirst()) {
+        if (eventCursor.moveToFirst()) {
             do {
 
-                allEvents.get(cursor.getPosition()).setTitle(cursor.getString(1));
-                allEvents.get(cursor.getPosition()).setColor(cursor.getString(2));
-            } while (cursor.moveToNext());
+                allEvents.get(eventCursor.getPosition()).setTitle(eventCursor.getString(1));
+                allEvents.get(eventCursor.getPosition()).setColor(eventCursor.getString(2));
+            } while (eventCursor.moveToNext());
         }
         //always close cursor!!
         eventCursor.close();
