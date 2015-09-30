@@ -95,14 +95,11 @@ public class CalendarDataSource {
                 };
 
         //Convert IDs this day to String table
-        List<String> eventIds = new ArrayList<>();
+
 
         for (int i = 0; i < allEvents.size(); i++) {
-            eventIds.add(Long.toString(allEvents.get(i).getId()));
-        }
 
-        String[] eventStringIds = new String[eventIds.size()];
-        eventStringIds = eventIds.toArray(eventStringIds);
+
 
         //cursor get needed data
         Cursor eventCursor =
@@ -111,18 +108,18 @@ public class CalendarDataSource {
                                 Events.CONTENT_URI,
                                 eventQuery,
                                 Events._ID + " = ? ",
-                                eventStringIds,
+                                new String[] {Long.toString(allEvents.get(i).getId())},
                                 null);
         //convert data from cursor
         if (eventCursor.moveToFirst()) {
-            do {
-
                 allEvents.get(eventCursor.getPosition()).setTitle(eventCursor.getString(1));
                 allEvents.get(eventCursor.getPosition()).setColor(eventCursor.getString(2));
-            } while (eventCursor.moveToNext());
         }
-        //always close cursor!!
-        eventCursor.close();
+            //always close cursor!!
+            eventCursor.close();
+        }
+
+
 
         return allEvents;
 
