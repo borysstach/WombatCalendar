@@ -3,8 +3,8 @@ package com.example.borys.wombatcalendar;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.CalendarContract.Calendars;
-import android.provider.CalendarContract.Instances;
 import android.provider.CalendarContract.Events;
+import android.provider.CalendarContract.Instances;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -61,7 +61,8 @@ public class CalendarDataSource {
         //list of all events this day
         List<EventData> allEvents = new ArrayList<>();
 
-        //searching for Events id this day from Instances table
+        ///////////searching for Events id this day from Instances table
+
         //what we want from data
         String[] instanceQuery =
                 new String[]{
@@ -85,7 +86,8 @@ public class CalendarDataSource {
         //always close cursor!!
         cursor.close();
 
-        /// now searching for details of events from Events table
+        ////////// now searching for details of events from Events table
+
         //what we want from data
         String[] eventQuery =
                 new String[]{
@@ -93,9 +95,6 @@ public class CalendarDataSource {
                         Events.TITLE,
                         Events.EVENT_COLOR,
                 };
-
-        //Convert IDs this day to String table
-
 
         for (int i = 0; i < allEvents.size(); i++) {
 
@@ -110,16 +109,15 @@ public class CalendarDataSource {
                                 Events._ID + " = ? ",
                                 new String[] {Long.toString(allEvents.get(i).getId())},
                                 null);
-        //convert data from cursor
+        //convert data from cursor0
         if (eventCursor.moveToFirst()) {
-                allEvents.get(eventCursor.getPosition()).setTitle(eventCursor.getString(1));
-                allEvents.get(eventCursor.getPosition()).setColor(eventCursor.getString(2));
+
+                allEvents.get(i).setTitle(eventCursor.getString(1));
+                allEvents.get(i).setColor(eventCursor.getString(2));
         }
             //always close cursor!!
             eventCursor.close();
         }
-
-
 
         return allEvents;
 
