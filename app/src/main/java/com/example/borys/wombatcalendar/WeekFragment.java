@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 
 public class WeekFragment extends Fragment {
@@ -99,12 +100,14 @@ public class WeekFragment extends Fragment {
         }
 
 
-        public void setAdapter( Calendar mCalendar) {
+        public void setAdapter() {
 
             CalendarDataSource readerEvents = new CalendarDataSource(getContext());
             Calendar testCalendarStart = Calendar.getInstance();
+            testCalendarStart.setTimeZone(TimeZone.getTimeZone("GMT"));
             testCalendarStart.set(mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH), 0, 1);
             Calendar testCalendarStop = Calendar.getInstance();
+            testCalendarStop.setTimeZone(TimeZone.getTimeZone("GMT"));
             testCalendarStop.set(mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH), 23, 59);
             //set adapter with all events this day
             mDayRecyclerView.setAdapter(new SingleDayRecyclerAdapter( readerEvents.getEventsFromDay(testCalendarStart, testCalendarStop)));
@@ -136,7 +139,7 @@ public class WeekFragment extends Fragment {
             int day = mCalendar.get(Calendar.DAY_OF_MONTH);
             String dayName = mDaysStrings.get(position);
             holder.bindDay(dayName + "  " + day);
-            holder.setAdapter(mCalendar);
+            holder.setAdapter();
 
         }
 
