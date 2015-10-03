@@ -99,13 +99,13 @@ public class WeekFragment extends Fragment {
         }
 
 
-        public void setAdapter() {
+        public void setAdapter( Calendar mCalendar) {
 
             CalendarDataSource readerEvents = new CalendarDataSource(getContext());
-            Calendar testCalendarStart = mCalendar;
-            testCalendarStart.set(testCalendarStart.get(Calendar.YEAR), testCalendarStart.get(Calendar.MONTH), testCalendarStart.get(Calendar.DAY_OF_MONTH), 0, 1);
-            Calendar testCalendarStop = mCalendar;
-            testCalendarStart.set(testCalendarStart.get(Calendar.YEAR), testCalendarStart.get(Calendar.MONTH), testCalendarStart.get(Calendar.DAY_OF_MONTH), 23, 59);
+            Calendar testCalendarStart = Calendar.getInstance();
+            testCalendarStart.set(mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH), 0, 1);
+            Calendar testCalendarStop = Calendar.getInstance();
+            testCalendarStop.set(mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH), 23, 59);
             //set adapter with all events this day
             mDayRecyclerView.setAdapter(new SingleDayRecyclerAdapter( readerEvents.getEventsFromDay(testCalendarStart, testCalendarStop)));
         }
@@ -131,11 +131,12 @@ public class WeekFragment extends Fragment {
                 //add one day in next day after monday
             mCalendar.add(Calendar.DAY_OF_WEEK, 1);
             }
-            holder.setAdapter();
+
 
             int day = mCalendar.get(Calendar.DAY_OF_MONTH);
             String dayName = mDaysStrings.get(position);
             holder.bindDay(dayName + "  " + day);
+            holder.setAdapter(mCalendar);
 
         }
 
