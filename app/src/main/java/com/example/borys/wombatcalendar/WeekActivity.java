@@ -11,7 +11,7 @@ import android.view.MenuItem;
 
 import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity {
+public class WeekActivity extends AppCompatActivity {
 
     public static final int MAX_PAGE = 200;
     public static int thisWeek;
@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_week);
 
         mCalendar = Calendar.getInstance();
         thisWeek = mCalendar.get(Calendar.WEEK_OF_YEAR);

@@ -1,4 +1,4 @@
-package com.example.borys.wombatcalendar;
+package com.example.borys.wombatcalendar.data;
 
 /**
  * Information of single calendar on device

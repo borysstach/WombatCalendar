@@ -1,17 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<LinearLayout
               android:id="@+id/day_linear_layout"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="150dp">
+              android:layout_height="150dp"
+    android:background="#FFEB3B">
     <TextView
         android:id="@+id/day_name_text_view"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        android:duplicateParentState="true"/>
 
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/single_day_recyclerview"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:background="#727272"/>
 </LinearLayout>
+    <TextView
+        android:id="@+id/day_button"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+</FrameLayout>

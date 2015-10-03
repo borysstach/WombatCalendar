@@ -2,6 +2,8 @@ package com.example.borys.wombatcalendar;
 
 import android.test.AndroidTestCase;
 
+import com.example.borys.wombatcalendar.data.CalendarDataSource;
+
 import java.util.Calendar;
 
 public class CalendarDataSourceTest extends AndroidTestCase{

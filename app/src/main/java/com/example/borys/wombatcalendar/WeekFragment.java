@@ -1,5 +1,6 @@
 package com.example.borys.wombatcalendar;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -10,6 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.borys.wombatcalendar.data.CalendarDataSource;
+import com.example.borys.wombatcalendar.data.EventData;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -19,20 +23,18 @@ import java.util.TimeZone;
 
 public class WeekFragment extends Fragment {
 
-    private int mCurrentWeek;
-    private RecyclerView mWeekRecyclerView;
     private List<String> mDaysStrings;
     private List<String> mMonthStrings;
     private Calendar mCalendar;
     private int mNumberOfFragment;
 
     static WeekFragment newInstance(int num) {
-        WeekFragment f = new WeekFragment();
+        WeekFragment fragment = new WeekFragment();
 
         Bundle args = new Bundle();
         args.putInt("num", num);
-        f.setArguments(args);
-        return f;
+        fragment.setArguments(args);
+        return fragment;
     }
 
 
@@ -73,13 +75,15 @@ public class WeekFragment extends Fragment {
 
         //find rootView with RecyclerView
         View rootView = inflater.inflate(R.layout.fragment_week, container, false);
-        //create Grid Recycler View
-        mWeekRecyclerView = (RecyclerView) rootView.findViewById(R.id.week_recycler_view);
+        //create Grid Recycler View for whole week
+        RecyclerView mWeekRecyclerView = (RecyclerView) rootView.findViewById(R.id.week_recycler_view);
         mWeekRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         mWeekRecyclerView.setAdapter(new DayOfWeekRecyclerAdapter());
 
         return rootView;
     }
+
+    ///////////////////////////////////////////////////  RecyclerView for Week Grid  ////////////////////////////////
 
     public class DayOfWeekViewHolder extends RecyclerView.ViewHolder {
 
@@ -90,6 +94,15 @@ public class WeekFragment extends Fragment {
             super(itemView);
             //find view
             mDayName = (TextView) itemView.findViewById(R.id.day_name_text_view);
+            TextView newActivityButton = (TextView) itemView.findViewById(R.id.day_button);
+            newActivityButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), DayActivity.class);
+                    startActivity(intent);
+                }
+            });
+            //find recycler view for Day Grid Item
             mDayRecyclerView = (RecyclerView) itemView.findViewById(R.id.single_day_recyclerview);
             mDayRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         }
@@ -99,7 +112,9 @@ public class WeekFragment extends Fragment {
             mDayName.setText(dayName);
         }
 
-
+        /**
+         * Set adapter on RecyclerView for Day Grid Item
+         */
         public void setAdapter() {
 
             CalendarDataSource readerEvents = new CalendarDataSource(getContext());
@@ -110,7 +125,7 @@ public class WeekFragment extends Fragment {
             testCalendarStop.setTimeZone(TimeZone.getTimeZone("GMT"));
             testCalendarStop.set(mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH), 23, 59);
             //set adapter with all events this day
-            mDayRecyclerView.setAdapter(new SingleDayRecyclerAdapter( readerEvents.getEventsFromDay(testCalendarStart, testCalendarStop)));
+            mDayRecyclerView.setAdapter(new SingleDayRecyclerAdapter(readerEvents.getEventsFromDay(testCalendarStart, testCalendarStop)));
         }
 
     }
@@ -123,6 +138,7 @@ public class WeekFragment extends Fragment {
             //inflate layout to ViewHolder
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
             View view = layoutInflater.inflate(R.layout.day_of_week, parent, false);
+
             //return new ViewHolder with layout
             return new DayOfWeekViewHolder(view);
         }
@@ -134,11 +150,11 @@ public class WeekFragment extends Fragment {
                 //add one day in next day after monday
             mCalendar.add(Calendar.DAY_OF_WEEK, 1);
             }
-
-
+            //set number of day for this day of week
             int day = mCalendar.get(Calendar.DAY_OF_MONTH);
             String dayName = mDaysStrings.get(position);
             holder.bindDay(dayName + "  " + day);
+            //make recyclerView with list of this day events
             holder.setAdapter();
 
         }
@@ -148,6 +164,10 @@ public class WeekFragment extends Fragment {
             return mDaysStrings.size();
         }
     }
+
+
+
+    //////////////////////////////////////////   RecyclerView inside Day Grid Item  ///////////////////////////////////////
 
 
     public class SingleDayViewHolder extends RecyclerView.ViewHolder {
@@ -208,10 +228,10 @@ public class WeekFragment extends Fragment {
     public void setData() {
         //set calendar to current showing week
         mCalendar = Calendar.getInstance();
-        mCurrentWeek = MainActivity.thisWeek + (mNumberOfFragment - MainActivity.MAX_PAGE / 2);
+        int mCurrentWeek = WeekActivity.thisWeek + (mNumberOfFragment - WeekActivity.MAX_PAGE / 2);
         mCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        mCalendar.add(Calendar.WEEK_OF_YEAR, (mCurrentWeek - MainActivity.thisWeek));
-        ((MainActivity)getActivity()).setActionBarTitle(mMonthStrings.get(mCalendar.get(Calendar.MONTH)));
+        mCalendar.add(Calendar.WEEK_OF_YEAR, (mCurrentWeek - WeekActivity.thisWeek));
+        ((WeekActivity)getActivity()).setActionBarTitle(mMonthStrings.get(mCalendar.get(Calendar.MONTH)));
     }
 }
 
