@@ -89,6 +89,7 @@ public class WeekFragment extends Fragment {
 
         private TextView mDayName;
         private RecyclerView mDayRecyclerView;
+        private Calendar cloneCalendar;
 
         public DayOfWeekViewHolder(View itemView) {
             super(itemView);
@@ -99,6 +100,9 @@ public class WeekFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), DayActivity.class);
+                    intent.putExtra("year", cloneCalendar.get(Calendar.YEAR));
+                    intent.putExtra("month", cloneCalendar.get(Calendar.MONTH));
+                    intent.putExtra("day", cloneCalendar.get(Calendar.DAY_OF_MONTH));
                     startActivity(intent);
                 }
             });
@@ -116,8 +120,10 @@ public class WeekFragment extends Fragment {
          * Set adapter on RecyclerView for Day Grid Item
          */
         public void setAdapter() {
+            //get current calendar data to start activty intent
+            cloneCalendar = (Calendar) mCalendar.clone();
 
-            CalendarDataSource readerEvents = new CalendarDataSource(getContext());
+            //get arguments start and end day
             Calendar testCalendarStart = Calendar.getInstance();
             testCalendarStart.setTimeZone(TimeZone.getTimeZone("GMT"));
             testCalendarStart.set(mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH), 0, 1);
@@ -125,6 +131,7 @@ public class WeekFragment extends Fragment {
             testCalendarStop.setTimeZone(TimeZone.getTimeZone("GMT"));
             testCalendarStop.set(mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH), 23, 59);
             //set adapter with all events this day
+            CalendarDataSource readerEvents = new CalendarDataSource(getContext());
             mDayRecyclerView.setAdapter(new SingleDayRecyclerAdapter(readerEvents.getEventsFromDay(testCalendarStart, testCalendarStop)));
         }
 
