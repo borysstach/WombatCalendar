@@ -235,9 +235,8 @@ public class WeekFragment extends Fragment {
     public void setData() {
         //set calendar to current showing week
         mCalendar = Calendar.getInstance();
-        int mCurrentWeek = WeekActivity.thisWeek + (mNumberOfFragment - WeekActivity.MAX_PAGE / 2);
         mCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        mCalendar.add(Calendar.WEEK_OF_YEAR, (mCurrentWeek - WeekActivity.thisWeek));
+        mCalendar.add(Calendar.WEEK_OF_YEAR, (mNumberOfFragment));
         ((WeekActivity)getActivity()).setActionBarTitle(mMonthStrings.get(mCalendar.get(Calendar.MONTH)));
     }
 }
