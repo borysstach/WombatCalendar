@@ -54,10 +54,17 @@ public class CalendarDataSource {
         return allCalendars;
     }
 
-    public List<EventData> getEventsFromDay(Calendar beginTime, Calendar endTime) {
+    public List<EventData> getEventsFromDay(Calendar calendar) {
+        Calendar beginCalendar = Calendar.getInstance();
+        beginCalendar.setTimeZone(TimeZone.getTimeZone("GMT"));
+        beginCalendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), 0, 1);
+        Calendar endaCalendar = Calendar.getInstance();
+        endaCalendar.setTimeZone(TimeZone.getTimeZone("GMT"));
+        endaCalendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), 23, 59);
+        
         //convert Callendar data to millis
-        long beginMillis = beginTime.getTimeInMillis();
-        long endMillis = endTime.getTimeInMillis();
+        long beginMillis = beginCalendar.getTimeInMillis();
+        long endMillis = endaCalendar.getTimeInMillis();
         //list of all events this day
         List<EventData> allEvents = new ArrayList<>();
 
