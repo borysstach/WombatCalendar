@@ -123,16 +123,9 @@ public class WeekFragment extends Fragment {
             //get current calendar data to start activty intent
             cloneCalendar = (Calendar) mCalendar.clone();
 
-            //get arguments start and end day
-            Calendar testCalendarStart = Calendar.getInstance();
-            testCalendarStart.setTimeZone(TimeZone.getTimeZone("GMT"));
-            testCalendarStart.set(mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH), 0, 1);
-            Calendar testCalendarStop = Calendar.getInstance();
-            testCalendarStop.setTimeZone(TimeZone.getTimeZone("GMT"));
-            testCalendarStop.set(mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH), 23, 59);
             //set adapter with all events this day
             CalendarDataSource readerEvents = new CalendarDataSource(getContext());
-            mDayRecyclerView.setAdapter(new SingleDayRecyclerAdapter(readerEvents.getEventsFromDay(testCalendarStart, testCalendarStop)));
+            mDayRecyclerView.setAdapter(new SingleDayRecyclerAdapter(readerEvents.getEventsFromDay(mCalendar)));
         }
 
     }
