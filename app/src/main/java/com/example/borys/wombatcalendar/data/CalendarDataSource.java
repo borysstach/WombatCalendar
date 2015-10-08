@@ -55,6 +55,11 @@ public class CalendarDataSource {
     }
 
     public List<EventData> getEventsFromDay(Calendar calendar) {
+        //list of all events this day
+        List<EventData> allEvents = new ArrayList<>();
+    
+        new Thread(new Runnable() {
+        public void run() {
         Calendar beginCalendar = Calendar.getInstance();
         beginCalendar.setTimeZone(TimeZone.getTimeZone("GMT"));
         beginCalendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), 0, 1);
@@ -65,8 +70,6 @@ public class CalendarDataSource {
         //convert Callendar data to millis
         long beginMillis = beginCalendar.getTimeInMillis();
         long endMillis = endaCalendar.getTimeInMillis();
-        //list of all events this day
-        List<EventData> allEvents = new ArrayList<>();
 
         ///////////searching for Events id this day from Instances table
 
@@ -125,6 +128,7 @@ public class CalendarDataSource {
             //always close cursor!!
             eventCursor.close();
         }
+        }).start();
 
         return allEvents;
 
