@@ -42,14 +42,8 @@ public class DayFragment extends Fragment{
     mCalendar.set(getArguments().getInt("year"), getArguments().getInt("month"), getArguments().getInt("day"));
        mCalendar.add(Calendar.DAY_OF_MONTH, getArguments().getInt("position"));
         CalendarDataSource readerEvents = new CalendarDataSource(getContext());
-        Calendar testCalendarStart = Calendar.getInstance();
-        testCalendarStart.setTimeZone(TimeZone.getTimeZone("GMT"));
-        testCalendarStart.set(mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH), 0, 1);
-        Calendar testCalendarStop = Calendar.getInstance();
-        testCalendarStop.setTimeZone(TimeZone.getTimeZone("GMT"));
-        testCalendarStop.set(mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH), 23, 59);
         //set adapter with all events this day
-        mEvents = readerEvents.getEventsFromDay(testCalendarStart, testCalendarStop);
+        mEvents = readerEvents.getEventsFromDay(mCalendar);
 
 
     }
