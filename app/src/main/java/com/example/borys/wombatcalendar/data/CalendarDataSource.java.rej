@@ -1,0 +1,9 @@
+diff a/app/src/main/java/com/example/borys/wombatcalendar/data/CalendarDataSource.java b/app/src/main/java/com/example/borys/wombatcalendar/data/CalendarDataSource.java	(rejected hunks)
+@@ -128,6 +128,7 @@
+             //always close cursor!!
+             eventCursor.close();
+         }
++        }).start();
+ 
+         return allEvents;
+ 

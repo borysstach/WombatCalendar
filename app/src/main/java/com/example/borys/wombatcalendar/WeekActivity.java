@@ -65,7 +65,7 @@ public class WeekActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            int openWeek = position - MAX_PAGE / 2);
+            int openWeek = position - MAX_PAGE / 2;
             return WeekFragment.newInstance(openWeek);
         }
 
