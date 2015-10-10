@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 
 
 public class WeekFragment extends Fragment {
@@ -122,10 +121,23 @@ public class WeekFragment extends Fragment {
         public void setAdapter() {
             //get current calendar data to start activty intent
             cloneCalendar = (Calendar) mCalendar.clone();
+            //new thread to get data from content provider
+            new Thread(new Runnable() {
+                public void run() {
+                    //getting data
+                    CalendarDataSource readerEvents = new CalendarDataSource(getContext());
+                    final List<EventData> events = readerEvents.getEventsFromDay(cloneCalendar);
 
-            //set adapter with all events this day
-            CalendarDataSource readerEvents = new CalendarDataSource(getContext());
-            mDayRecyclerView.setAdapter(new SingleDayRecyclerAdapter(readerEvents.getEventsFromDay(mCalendar)));
+                    //back to UI thread
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //set adapter with all events this day
+                            mDayRecyclerView.setAdapter(new SingleDayRecyclerAdapter(events));
+                        }
+                    });
+                }
+            }).start();
         }
 
     }
