@@ -14,14 +14,13 @@ import com.example.borys.wombatcalendar.data.EventData;
 
 import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 
-public class DayFragment extends Fragment{
+public class DayFragment extends Fragment {
 
     private Calendar mCalendar = Calendar.getInstance();
     private List<EventData> mEvents;
 
-    static DayFragment newInstance (int year, int month, int day, int position){
+    static DayFragment newInstance(int year, int month, int day, int position) {
         DayFragment fragment = new DayFragment();
 
         Bundle args = new Bundle();
@@ -38,9 +37,8 @@ public class DayFragment extends Fragment{
         super.onCreate(savedInstanceState);
 
 
-
-    mCalendar.set(getArguments().getInt("year"), getArguments().getInt("month"), getArguments().getInt("day"));
-       mCalendar.add(Calendar.DAY_OF_MONTH, getArguments().getInt("position"));
+        mCalendar.set(getArguments().getInt("year"), getArguments().getInt("month"), getArguments().getInt("day"));
+        mCalendar.add(Calendar.DAY_OF_MONTH, getArguments().getInt("position"));
         CalendarDataSource readerEvents = new CalendarDataSource(getContext());
         //set adapter with all events this day
         mEvents = readerEvents.getEventsFromDay(mCalendar);
@@ -52,14 +50,20 @@ public class DayFragment extends Fragment{
                              Bundle savedInstanceState) {
 
         //find rootView with RecyclerView
-        View rootView = inflater.inflate(R.layout.fragment_week, container, false);
-        //create Grid Recycler View
-       RecyclerView mDayRecyclerView = (RecyclerView) rootView.findViewById(R.id.week_recycler_view);
+        View rootView = inflater.inflate(R.layout.day_view, container, false);
+        //create whole day events RecyclerView
+        RecyclerView wholeDayRecyclerView = (RecyclerView) rootView.findViewById(R.id.whole_day_events_recycler);
+        wholeDayRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        wholeDayRecyclerView.setAdapter(new WholeDayRecyclerAdapter());
+        //create events Recycler View
+        RecyclerView mDayRecyclerView = (RecyclerView) rootView.findViewById(R.id.specified_time_events_recycler);
         mDayRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mDayRecyclerView.setAdapter(new SingleDayRecyclerAdapter());
 
         return rootView;
     }
+
+    ////////////////////////////             VIEW HOLDERS
 
     public class SingleDayViewHolder extends RecyclerView.ViewHolder {
 
@@ -69,7 +73,7 @@ public class DayFragment extends Fragment{
         public SingleDayViewHolder(View itemView) {
             super(itemView);
             //find view
-            mEventTitle = (TextView) itemView.findViewById(R.id.single_day_textview);
+            mEventTitle = (TextView) itemView.findViewById(R.id.specific_time_event_name);
         }
 
 
@@ -77,6 +81,27 @@ public class DayFragment extends Fragment{
             mEventTitle.setText(event.getTitle());
         }
     }
+
+    ////////////////////////////
+
+    public class WholeDayViewHolder extends RecyclerView.ViewHolder {
+
+        private TextView mEventTitle;
+
+
+        public WholeDayViewHolder(View itemView) {
+            super(itemView);
+            //find view
+            mEventTitle = (TextView) itemView.findViewById(R.id.whole_day_event_name);
+        }
+
+
+        public void bindEvent(EventData event) {
+            mEventTitle.setText(event.getTitle());
+        }
+    }
+
+    ////////////////////////////             ADAPTERS
 
     public class SingleDayRecyclerAdapter extends RecyclerView.Adapter<SingleDayViewHolder> {
 
@@ -86,7 +111,7 @@ public class DayFragment extends Fragment{
 
             //inflate layout to ViewHolder
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            View view = layoutInflater.inflate(R.layout.single_day, parent, false);
+            View view = layoutInflater.inflate(R.layout.specific_time_event_layout, parent, false);
 
             //return new ViewHolder with layout
             return new SingleDayViewHolder(view);
@@ -108,6 +133,37 @@ public class DayFragment extends Fragment{
         }
     }
 
+    ////////////////////////////
+
+    public class WholeDayRecyclerAdapter extends RecyclerView.Adapter<WholeDayViewHolder> {
+
+
+        @Override
+        public WholeDayViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+            //inflate layout to ViewHolder
+            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+            View view = layoutInflater.inflate(R.layout.whole_day_event_layout, parent, false);
+
+            //return new ViewHolder with layout
+            return new WholeDayViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(WholeDayViewHolder holder, int position) {
+            //bind data
+            if (!mEvents.isEmpty()) {
+                EventData event = mEvents.get(position);
+                holder.bindEvent(event);
+            }
+        }
+
+
+        @Override
+        public int getItemCount() {
+            return mEvents.size();
+        }
+    }
 
 
 }

@@ -34,7 +34,7 @@ public class DayActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_week);
+        setContentView(R.layout.view_pager);
 
         mDaysStrings = new ArrayList<>(Arrays.asList(
                 getString(R.string.sunday),

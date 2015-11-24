@@ -1,8 +1,33 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
+        <item name="android:windowContentOverlay">@null</item>
         <!-- Customize your theme here. -->
+    </style>
+    <style name="title">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold|normal</item>
+        <item name="android:textColor">@color/whole_day_text</item>
+    </style>
+
+    <style name="subtittle">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/whole_day_text</item>
+    </style>
+
+    <style name="numbers">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/just_text</item>
+        <item name="android:gravity">top</item>
+        <item name="android:paddingTop">4dp</item>
+    </style>
+    <style name="day_title">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/just_text</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
 </resources>

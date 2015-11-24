@@ -25,7 +25,7 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_day">DayActivity</string>
 
-    <string name="hello_world">Hello world!</string>
+    <string name="whole_day_event">Dzisiaj:</string>
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

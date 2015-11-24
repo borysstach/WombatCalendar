@@ -23,7 +23,7 @@ public class WeekActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_week);
+        setContentView(R.layout.view_pager);
 
         mCalendar = Calendar.getInstance();
         thisWeek = mCalendar.get(Calendar.WEEK_OF_YEAR);

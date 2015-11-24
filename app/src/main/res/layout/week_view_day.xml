@@ -7,20 +7,27 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="150dp"
-    android:background="#FFEB3B">
+              android:layout_marginRight="@dimen/activitu_half_margin"
+              android:layout_marginLeft="@dimen/activitu_half_margin"
+              android:layout_marginBottom="@dimen/activitu_half_margin"
+              android:background="@color/back">
     <TextView
         android:id="@+id/day_name_text_view"
-        android:layout_width="wrap_content"
+        style="@style/day_title"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="false"
-        android:duplicateParentState="true"/>
+        android:duplicateParentState="true"
+        android:gravity="center_horizontal"
+        />
+
 
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/single_day_recyclerview"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:background="#727272"/>
+        android:padding="8dp"/>
 </LinearLayout>
     <TextView
         android:id="@+id/day_button"

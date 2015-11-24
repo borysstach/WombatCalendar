@@ -73,7 +73,7 @@ public class WeekFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         //find rootView with RecyclerView
-        View rootView = inflater.inflate(R.layout.fragment_week, container, false);
+        View rootView = inflater.inflate(R.layout.week_view_fragment, container, false);
         //create Grid Recycler View for whole week
         RecyclerView mWeekRecyclerView = (RecyclerView) rootView.findViewById(R.id.week_recycler_view);
         mWeekRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
@@ -149,7 +149,7 @@ public class WeekFragment extends Fragment {
         public DayOfWeekViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             //inflate layout to ViewHolder
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            View view = layoutInflater.inflate(R.layout.day_of_week, parent, false);
+            View view = layoutInflater.inflate(R.layout.week_view_day, parent, false);
 
             //return new ViewHolder with layout
             return new DayOfWeekViewHolder(view);
@@ -211,7 +211,7 @@ public class WeekFragment extends Fragment {
 
             //inflate layout to ViewHolder
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            View view = layoutInflater.inflate(R.layout.single_day, parent, false);
+            View view = layoutInflater.inflate(R.layout.week_view_single_event, parent, false);
 
             //return new ViewHolder with layout
             return new SingleDayViewHolder(view);
