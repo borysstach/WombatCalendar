@@ -6,8 +6,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
 import java.util.Calendar;
 
@@ -19,11 +22,21 @@ public class WeekActivity extends AppCompatActivity {
     private WeekPageAdapter mWeekPageAdapter;
     private ViewPager mViewPager;
     private Calendar mCalendar;
+    private CollapsingToolbarLayout mCollapsingToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.view_pager);
+        setContentView(R.layout.week_view_pager);
+
+        //get image for toolbar
+        ImageView toolImage = (ImageView)findViewById(R.id.tool_image);
+        toolImage.setImageResource(getResources().getIdentifier("tapir", "drawable", getPackageName()));
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // Set Collapsing Toolbar layout to the screen
+        mCollapsingToolbar =
+                (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
 
         mCalendar = Calendar.getInstance();
         thisWeek = mCalendar.get(Calendar.WEEK_OF_YEAR);
@@ -75,9 +88,7 @@ public class WeekActivity extends AppCompatActivity {
         }
     }
     public void setActionBarTitle(String title) {
-        assert getSupportActionBar() != null;
-        getSupportActionBar().setTitle(title);
-        this.invalidateOptionsMenu();
+        mCollapsingToolbar.setTitle(title);
     }
 }
 
