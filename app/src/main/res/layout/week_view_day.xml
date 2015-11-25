@@ -6,10 +6,11 @@
               android:id="@+id/day_linear_layout"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="150dp"
+              android:layout_height="@dimen/week_day_height"
               android:layout_marginRight="@dimen/activitu_half_margin"
               android:layout_marginLeft="@dimen/activitu_half_margin"
-              android:layout_marginBottom="@dimen/activitu_half_margin">
+              android:layout_marginBottom="@dimen/activity_vertical_margin"
+              android:background="@drawable/stroke_shape">
     <TextView
         android:id="@+id/day_name_text_view"
         style="@style/day_title"
@@ -18,8 +19,8 @@
         android:clickable="false"
         android:duplicateParentState="true"
         android:gravity="center_horizontal"
+        android:paddingTop="4dp"
         />
-
 
 
     <android.support.v7.widget.RecyclerView

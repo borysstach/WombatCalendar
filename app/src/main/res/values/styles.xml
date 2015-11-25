@@ -1,10 +1,27 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowContentOverlay">@null</item>
-        <!-- Customize your theme here. -->
-    </style>
+    <style name="AppTheme" parent="AppTheme.Base" >
+    <!-- Base application theme.
+         Defining this lets values-v21/styles.xml reuse it with changes. -->
+</style>
+<style name="AppTheme.Base" parent="Theme.AppCompat.NoActionBar">
+<!-- colorPrimary is used, for instance, for the default ActionBar
+     (but not Toolbar) background.
+      We specify the same color for the toolbar background in
+      toolbar.xml.. -->
+<item name="colorPrimary">@color/back</item>
+
+<!-- colorPrimaryDark is used for the status bar (with the
+     battery, clock, etc). -->
+<item name="colorPrimaryDark">@color/stroke</item>
+
+<!-- colorAccent is used as the default value for
+     colorControlActivated which is used to tint widgets. -->
+<item name="colorAccent">@color/stroke</item>
+    <item name="android:textColorPrimary">@color/stroke</item>
+    <item name="android:textColorSecondary">@color/stroke</item>
+    <item name="actionMenuTextColor">@color/stroke</item>
+</style>
     <style name="title">
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold|normal</item>
@@ -24,10 +41,18 @@
         <item name="android:gravity">top</item>
         <item name="android:paddingTop">4dp</item>
     </style>
+
     <style name="day_title">
         <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/just_text</item>
+        <item name="android:textColor">@color/day_title</item>
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="week_month_title">
+        <item name="android:textColor">#ffffffff</item>
+        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">1</item>
+    </style>
 </resources>

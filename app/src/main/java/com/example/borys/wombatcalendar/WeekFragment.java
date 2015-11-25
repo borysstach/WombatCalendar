@@ -108,6 +108,7 @@ public class WeekFragment extends Fragment {
             //find recycler view for Day Grid Item
             mDayRecyclerView = (RecyclerView) itemView.findViewById(R.id.single_day_recyclerview);
             mDayRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            mDayRecyclerView.setAdapter(new SingleDayRecyclerAdapter(new ArrayList<EventData>()));
         }
 
         public void bindDay(String dayName) {

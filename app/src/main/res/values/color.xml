@@ -3,8 +3,10 @@
     <color name="whole_day_background">#FFCDD2</color>
     <color name="whole_day_text">#B71C1C</color>
     <color name="line">#BDBDBD</color>
-    <color name="just_text">#424242</color>
-    <color name="back">#4DEEEEEE</color>
+    <color name="day_title">#a03968</color>
+    <color name="just_text">#d689ab</color>
+    <color name="back">#F5F5F5</color>
     <color name="back_title">#80BDBDBD</color>
     <color name="back_text">#A6EEEEEE</color>
+    <color name="stroke">#7b2854</color>
 </resources>
