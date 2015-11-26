@@ -31,14 +31,17 @@ public class CalendarDataSource {
                         Calendars.NAME,
                         Calendars.ACCOUNT_NAME,
                         Calendars.ACCOUNT_TYPE};
-        //get data from provider
-        Cursor cursor =
-                mContext.getContentResolver().
-                        query(Calendars.CONTENT_URI,
-                                query,
-                                Calendars.VISIBLE + " = 1",
-                                null,
-                                Calendars._ID + " ASC");
+        Cursor cursor;
+        do {
+            //get data from provider
+            cursor =
+                    mContext.getContentResolver().
+                            query(Calendars.CONTENT_URI,
+                                    query,
+                                    Calendars.VISIBLE + " = 1",
+                                    null,
+                                    Calendars._ID + " ASC");
+        } while (cursor == null);
         //read cursor
         if (cursor.moveToFirst()) {
             do {
@@ -52,7 +55,9 @@ public class CalendarDataSource {
         }
         //always close cursor!!
         cursor.close();
+
         return allCalendars;
+
     }
 
     public List<EventData> getEventsFromDay(Calendar calendar) {
@@ -62,7 +67,7 @@ public class CalendarDataSource {
         Calendar endaCalendar = Calendar.getInstance();
         endaCalendar.setTimeZone(TimeZone.getTimeZone("GMT"));
         endaCalendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), 23, 59);
-        
+
         //convert Callendar data to millis
         long beginMillis = beginCalendar.getTimeInMillis();
         long endMillis = endaCalendar.getTimeInMillis();
@@ -78,11 +83,12 @@ public class CalendarDataSource {
                         Instances.BEGIN,
                         Instances.END,
                         Instances.EVENT_ID};
-
-        //cursor get needed data
-        Cursor cursor =
-                Instances.query(mContext.getContentResolver(), instanceQuery, beginMillis, endMillis);
-
+        Cursor cursor;
+        do {
+            //cursor get needed data
+            cursor =
+                    Instances.query(mContext.getContentResolver(), instanceQuery, beginMillis, endMillis);
+        } while (cursor == null);
         if (cursor.moveToFirst()) {
             do {
                 //save id of every event this day
@@ -93,6 +99,7 @@ public class CalendarDataSource {
         }
         //always close cursor!!
         cursor.close();
+
 
         ////////// now searching for details of events from Events table
 
@@ -106,26 +113,31 @@ public class CalendarDataSource {
 
         for (int i = 0; i < allEvents.size(); i++) {
 
+            Cursor eventCursor;
+            do {
 
 
-        //cursor get needed data
-        Cursor eventCursor =
-                mContext.getContentResolver().
-                        query(
-                                Events.CONTENT_URI,
-                                eventQuery,
-                                Events._ID + " = ? ",
-                                new String[] {Long.toString(allEvents.get(i).getId())},
-                                null);
-        //convert data from cursor0
-        if (eventCursor.moveToFirst()) {
+                //cursor get needed data
+                eventCursor =
+                        mContext.getContentResolver().
+                                query(
+                                        Events.CONTENT_URI,
+                                        eventQuery,
+                                        Events._ID + " = ? ",
+                                        new String[]{Long.toString(allEvents.get(i).getId())},
+                                        null);
+
+            } while (eventCursor == null);
+            //convert data from cursor0
+            if (eventCursor.moveToFirst()) {
 
                 allEvents.get(i).setTitle(eventCursor.getString(1));
                 allEvents.get(i).setColor(eventCursor.getString(2));
-        }
+            }
             //always close cursor!!
             eventCursor.close();
         }
+
 
         return allEvents;
 

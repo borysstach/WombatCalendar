@@ -78,7 +78,7 @@ public class WeekFragment extends Fragment {
         RecyclerView mWeekRecyclerView = (RecyclerView) rootView.findViewById(R.id.week_recycler_view);
         mWeekRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         mWeekRecyclerView.setAdapter(new DayOfWeekRecyclerAdapter());
-
+        ((WeekActivity)getActivity()).setActionBarTitle(mMonthStrings.get(mCalendar.get(Calendar.MONTH)));
         return rootView;
     }
 
@@ -128,7 +128,9 @@ public class WeekFragment extends Fragment {
                     //getting data
                     CalendarDataSource readerEvents = new CalendarDataSource(getContext());
                     final List<EventData> events = readerEvents.getEventsFromDay(cloneCalendar);
-
+                    //to prevent null exeption
+                    if(getActivity() == null)
+                        return;
                     //back to UI thread
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
@@ -243,7 +245,6 @@ public class WeekFragment extends Fragment {
         mCalendar = Calendar.getInstance();
         mCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
         mCalendar.add(Calendar.WEEK_OF_YEAR, (mNumberOfFragment));
-        ((WeekActivity)getActivity()).setActionBarTitle(mMonthStrings.get(mCalendar.get(Calendar.MONTH)));
     }
 }
 
