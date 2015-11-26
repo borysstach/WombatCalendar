@@ -5,4 +5,5 @@
     <dimen name="activitu_half_margin">4dp</dimen>
     <dimen name="appbar_height">200dp</dimen>
     <dimen name="week_day_height">180dp</dimen>
+    <dimen name="week_corner_radius">4dp</dimen>
 </resources>

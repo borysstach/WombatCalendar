@@ -12,7 +12,7 @@
     <string name="january">styczeń</string>
     <string name="february">luty</string>
     <string name="march">marzec</string>
-    <string name="april">kwiecien</string>
+    <string name="april">kwiecień</string>
     <string name="may">maj</string>
     <string name="june">czerwiec</string>
     <string name="julay">lipiec</string>
@@ -21,6 +21,19 @@
     <string name="october">październik</string>
     <string name="november">listopad</string>
     <string name="december">grudzień</string>
+
+    <string name="p_january">styczen</string>
+    <string name="p_february">luty</string>
+    <string name="p_march">marzec</string>
+    <string name="p_april">kwiecien</string>
+    <string name="p_may">maj</string>
+    <string name="p_june">czerwiec</string>
+    <string name="p_julay">lipiec</string>
+    <string name="p_august">sierpien</string>
+    <string name="p_september">wrzesien</string>
+    <string name="p_october">pazdziernik</string>
+    <string name="p_november">listopad</string>
+    <string name="p_december">grudzien</string>
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_day">DayActivity</string>

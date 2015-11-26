@@ -6,7 +6,57 @@
     <color name="day_title">#a03968</color>
     <color name="just_text">#d689ab</color>
     <color name="back">#F5F5F5</color>
-    <color name="back_title">#80BDBDBD</color>
-    <color name="back_text">#A6EEEEEE</color>
     <color name="stroke">#7b2854</color>
+    <color name="my_primary_dark">#212121</color>
+    <color name="my_primary_light">#B6B6B6</color>
+
+    <color name="styczen_day_title">#95436E</color>
+    <color name="styczen_stroke">#7B2854</color>
+    <color name="styczen_just_text">#B87196</color>
+
+    <color name="luty_day_title">#FA477D</color>
+    <color name="luty_stroke">#F52262</color>
+    <color name="luty_just_text">#FE9BB9</color>
+
+    <color name="marzec_day_title">#7CCDD8</color>
+    <color name="marzec_stroke">#51ABB8</color>
+    <color name="marzec_just_text">#AAE6EE</color>
+
+    <color name="kwiecien_day_title">#C92716</color>
+    <color name="kwiecien_stroke">#A01506</color>
+    <color name="kwiecien_just_text">#E84B3A</color>
+
+    <color name="maj_day_title">#ACC349</color>
+    <color name="maj_stroke">#8BA128</color>
+    <color name="maj_just_text">#D4E878</color>
+
+    <color name="czerwiec_day_title">#D77D2C</color>
+    <color name="czerwiec_stroke">#AA5B14</color>
+    <color name="czerwiec_just_text">#EC9B52</color>
+
+    <color name="lipiec_day_title">#19A5B9</color>
+    <color name="lipiec_stroke">#028597</color>
+    <color name="lipiec_just_text">#39b8c9</color>
+
+    <color name="sierpien_day_title">#CDB803</color>
+    <color name="sierpien_stroke">#A29200</color>
+    <color name="sierpien_just_text">#FAE41A</color>
+
+    <color name="wrzesien_day_title">#6C9E3D</color>
+    <color name="wrzesien_stroke">#4B7B1D</color>
+    <color name="wrzesien_just_text">#95c16a</color>
+
+    <color name="pazdziernik_day_title">#E63B13</color>
+    <color name="pazdziernik_stroke">#B02808</color>
+    <color name="pazdziernik_just_text">#F66441</color>
+
+    <color name="listopad_day_title">#041895</color>
+    <color name="listopad_stroke">#021279</color>
+    <color name="listopad_just_text">#0820B6</color>
+
+
+    <color name="grudzien_day_title">#AE1536</color>
+    <color name="grudzien_stroke">#8A0320</color>
+    <color name="grudzien_just_text">#cf3153</color>
+
 </resources>

@@ -1,14 +1,19 @@
 package com.example.borys.wombatcalendar;
 
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.borys.wombatcalendar.data.CalendarDataSource;
@@ -23,9 +28,11 @@ import java.util.List;
 public class WeekFragment extends Fragment {
 
     private List<String> mDaysStrings;
-    private List<String> mMonthStrings;
+    private List<String> mMonthColorStrings;
     private Calendar mCalendar;
+    public int currentMonth;
     private int mNumberOfFragment;
+
 
     static WeekFragment newInstance(int num) {
         WeekFragment fragment = new WeekFragment();
@@ -51,20 +58,22 @@ public class WeekFragment extends Fragment {
                 getString(R.string.saturday),
                 getString(R.string.sunday)));
 
-        mMonthStrings = new ArrayList<>(Arrays.asList(
-                getString(R.string.january),
-                getString(R.string.february),
-                getString(R.string.march),
-                getString(R.string.april),
-                getString(R.string.may),
-                getString(R.string.june),
-                getString(R.string.julay),
-                getString(R.string.august),
-                getString(R.string.september),
-                getString(R.string.october),
-                getString(R.string.november),
-                getString(R.string.december)));
+        mMonthColorStrings = new ArrayList<>(Arrays.asList(
+                getString(R.string.p_january),
+                getString(R.string.p_february),
+                getString(R.string.p_march),
+                getString(R.string.p_april),
+                getString(R.string.p_may),
+                getString(R.string.p_june),
+                getString(R.string.p_julay),
+                getString(R.string.p_august),
+                getString(R.string.p_september),
+                getString(R.string.p_october),
+                getString(R.string.p_november),
+                getString(R.string.p_december)));
+
         setData();
+        currentMonth = mCalendar.get(Calendar.MONTH);
 
     }
 
@@ -78,9 +87,10 @@ public class WeekFragment extends Fragment {
         RecyclerView mWeekRecyclerView = (RecyclerView) rootView.findViewById(R.id.week_recycler_view);
         mWeekRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         mWeekRecyclerView.setAdapter(new DayOfWeekRecyclerAdapter());
-        ((WeekActivity)getActivity()).setActionBarTitle(mMonthStrings.get(mCalendar.get(Calendar.MONTH)));
+
         return rootView;
     }
+
 
     ///////////////////////////////////////////////////  RecyclerView for Week Grid  ////////////////////////////////
 
@@ -88,12 +98,27 @@ public class WeekFragment extends Fragment {
 
         private TextView mDayName;
         private RecyclerView mDayRecyclerView;
+        private LinearLayout mLinearLayout;
         private Calendar cloneCalendar;
 
         public DayOfWeekViewHolder(View itemView) {
             super(itemView);
             //find view
             mDayName = (TextView) itemView.findViewById(R.id.day_name_text_view);
+            //change color depend of month
+            String monthString = mMonthColorStrings.get(currentMonth)+"_day_title";
+            int thisMonthColor= ContextCompat.getColor(getActivity(), getActivity().getResources().getIdentifier(monthString, "color", getActivity().getPackageName()));
+            mDayName.setTextColor(thisMonthColor);
+            //get stroke width
+            Resources r = getResources();
+            float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, r.getDisplayMetrics());
+            int intPx = Math.round(px);
+            //change stroke color depend of month
+            GradientDrawable strokeDrawable = (GradientDrawable) ContextCompat.getDrawable(getActivity() , getActivity().getResources().getIdentifier("stroke_shape", "drawable", getActivity().getPackageName()));
+            String monthColorString = mMonthColorStrings.get(currentMonth)+"_stroke";
+            strokeDrawable.setStroke(intPx ,ContextCompat.getColor(getActivity(), getActivity().getResources().getIdentifier(monthColorString, "color", getActivity().getPackageName())));
+            mLinearLayout = (LinearLayout) itemView.findViewById(R.id.day_linear_layout);
+            mLinearLayout.setBackground(strokeDrawable);
             TextView newActivityButton = (TextView) itemView.findViewById(R.id.day_button);
             newActivityButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -194,6 +219,9 @@ public class WeekFragment extends Fragment {
             super(itemView);
             //find view
             mEventTitle = (TextView) itemView.findViewById(R.id.single_day_textview);
+            //set color depend of month
+            String monthString = mMonthColorStrings.get(currentMonth)+"_just_text";
+            mEventTitle.setTextColor(ContextCompat.getColor(getActivity(), getActivity().getResources().getIdentifier(monthString, "color", getActivity().getPackageName())));
         }
 
 
@@ -246,6 +274,7 @@ public class WeekFragment extends Fragment {
         mCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
         mCalendar.add(Calendar.WEEK_OF_YEAR, (mNumberOfFragment));
     }
+
 }
 
 
