@@ -9,7 +9,7 @@
               android:layout_height="@dimen/week_day_height"
               android:layout_marginRight="@dimen/activitu_half_margin"
               android:layout_marginLeft="@dimen/activitu_half_margin"
-              android:layout_marginBottom="@dimen/activity_vertical_margin"
+              android:layout_marginTop="@dimen/activity_vertical_margin"
               android:background="@drawable/stroke_shape">
     <TextView
         android:id="@+id/day_name_text_view"

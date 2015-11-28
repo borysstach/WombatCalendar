@@ -2,15 +2,17 @@ package com.example.borys.wombatcalendar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,6 +29,9 @@ public class DayActivity extends AppCompatActivity {
     private int mYear;
     private int mMonth;
     private int mDay;
+    private ImageView toolBarImage;
+    public CollapsingToolbarLayout collapsingToolbarLayout;
+
 
     private List<String> mDaysStrings;
 
@@ -35,10 +40,10 @@ public class DayActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.view_pager);
-
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        setSupportActionBar(myToolbar);
+        setContentView(R.layout.day_view_pager);
+//
+//        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+//        setSupportActionBar(myToolbar);
 
         mDaysStrings = new ArrayList<>(Arrays.asList(
                 getString(R.string.sunday),
@@ -71,9 +76,13 @@ public class DayActivity extends AppCompatActivity {
         mCalendar.set(mYear, mMonth, mDay);
 
         mDayPageAdapter = new DayPageAdapter(getSupportFragmentManager());
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        mViewPager = (ViewPager) findViewById(R.id.day_viewpager);
         mViewPager.setAdapter(mDayPageAdapter);
         mViewPager.setCurrentItem(MAX_PAGE / 2);
+
+        //get image for toolbar
+        toolBarImage = (ImageView) findViewById(R.id.tool_image);
+        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
 
     }
 
@@ -117,7 +126,7 @@ public class DayActivity extends AppCompatActivity {
             super.setPrimaryItem(container, position, object);
             Calendar calendar = (Calendar) mCalendar.clone();
             calendar.add(Calendar.DAY_OF_MONTH, position - MAX_PAGE / 2);
-            setActionBarTitle((mDaysStrings.get(calendar.get(Calendar.DAY_OF_WEEK) - 1) + " "+ calendar.get(Calendar.DAY_OF_MONTH)));
+            //setActionBarTitle((mDaysStrings.get(calendar.get(Calendar.DAY_OF_WEEK) - 1) + " "+ calendar.get(Calendar.DAY_OF_MONTH)));
         }
 
         @Override
@@ -126,9 +135,13 @@ public class DayActivity extends AppCompatActivity {
         }
     }
 
-    public void setActionBarTitle(String title) {
-        assert getSupportActionBar() != null;
-        getSupportActionBar().setTitle(title);
-        this.invalidateOptionsMenu();
+    public void setActionBarStyle(String title, String picture) {
+        collapsingToolbarLayout.setTitle(title);
+        String monthString = picture + "_day_title";
+        int color = ContextCompat.getColor(this, getResources().getIdentifier(monthString, "color", getPackageName()));
+        collapsingToolbarLayout.setCollapsedTitleTextColor(color);
+        collapsingToolbarLayout.setExpandedTitleColor(color);
+        toolBarImage.setImageResource(getResources().getIdentifier(picture, "drawable", getPackageName()));
+        supportInvalidateOptionsMenu();
     }
 }

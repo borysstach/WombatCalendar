@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
@@ -25,7 +24,7 @@ public class WeekActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private Calendar mCalendar;
     private ImageView toolBarImage;
-    CollapsingToolbarLayout collapsingToolbarLayout;
+    public CollapsingToolbarLayout collapsingToolbarLayout;
     private List<String> mMonthStrings;
     private List<String> mMonthPictureStrings;
 
@@ -37,7 +36,7 @@ public class WeekActivity extends AppCompatActivity {
         mCalendar = Calendar.getInstance();
         thisWeek = mCalendar.get(Calendar.WEEK_OF_YEAR);
         mWeekPageAdapter = new WeekPageAdapter(getSupportFragmentManager());
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        mViewPager = (ViewPager) findViewById(R.id.week_viewpager);
         mViewPager.setAdapter(mWeekPageAdapter);
         mViewPager.setCurrentItem(MAX_PAGE / 2);
 
@@ -75,7 +74,33 @@ public class WeekActivity extends AppCompatActivity {
 
     }
 
-//    @Override
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        //listen change fragments
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                //change collapsing appbar layout
+                int currentMonth = getMonth(position);
+                setActionBarStyle(mMonthStrings.get(currentMonth), mMonthPictureStrings.get(currentMonth));
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
+
+
+    //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
 //        // Inflate the menu; this adds items to the action bar if it is present.
 //        getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -99,7 +124,7 @@ public class WeekActivity extends AppCompatActivity {
 
     public class WeekPageAdapter extends FragmentStatePagerAdapter {
 
-
+        private FragmentManager mFragmentManager;
         public WeekPageAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -110,13 +135,8 @@ public class WeekActivity extends AppCompatActivity {
             return WeekFragment.newInstance(openWeek);
         }
 
-        @Override
-        public void setPrimaryItem(ViewGroup container, int position, Object object) {
-            WeekFragment primaryFragment = (WeekFragment)object;
-            int currentMonth = primaryFragment.currentMonth;
-            setActionBarStyle(mMonthStrings.get(currentMonth), mMonthPictureStrings.get(currentMonth));
-            super.setPrimaryItem(container, position, object);
-        }
+
+
 
         @Override
         public int getCount() {
@@ -125,13 +145,30 @@ public class WeekActivity extends AppCompatActivity {
     }
 
     public void setActionBarStyle(String title, String picture) {
-        collapsingToolbarLayout.setTitle(title);
-        String monthString = picture + "_day_title";
-        int color = ContextCompat.getColor(this, getResources().getIdentifier(monthString, "color", getPackageName()));
-        collapsingToolbarLayout.setCollapsedTitleTextColor(color);
-        collapsingToolbarLayout.setExpandedTitleColor(color);
-        toolBarImage.setImageResource(getResources().getIdentifier(picture, "drawable", getPackageName()));
-        supportInvalidateOptionsMenu();
+        //check if change layout is needed
+        if (collapsingToolbarLayout.getTitle() != title) {
+            //set title
+            collapsingToolbarLayout.setTitle(title);
+            //get month color
+            String monthString = picture + "_day_title";
+            int color = ContextCompat.getColor(this, getResources().getIdentifier(monthString, "color", getPackageName()));
+            //set colors
+            collapsingToolbarLayout.setCollapsedTitleTextColor(color);
+            collapsingToolbarLayout.setExpandedTitleColor(color);
+            //set image
+            toolBarImage.setImageResource(getResources().getIdentifier(picture, "drawable", getPackageName()));
+        }
+    }
+
+    //get month from ViewPagerPosition
+    public int getMonth(int position){
+        //get data from first page
+        Calendar tempCalendar = Calendar.getInstance();
+        //set first day
+        tempCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        //add scrolled pages
+        tempCalendar.add(Calendar.WEEK_OF_YEAR, position - MAX_PAGE / 2 );
+        return tempCalendar.get(Calendar.MONTH);
     }
 
 }
