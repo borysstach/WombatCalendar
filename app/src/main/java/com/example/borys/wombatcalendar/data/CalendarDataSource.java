@@ -32,30 +32,30 @@ public class CalendarDataSource {
                         Calendars.ACCOUNT_NAME,
                         Calendars.ACCOUNT_TYPE};
         Cursor cursor;
-        do {
-            //get data from provider
-            cursor =
-                    mContext.getContentResolver().
-                            query(Calendars.CONTENT_URI,
-                                    query,
-                                    Calendars.VISIBLE + " = 1",
-                                    null,
-                                    Calendars._ID + " ASC");
-        } while (cursor == null);
-        //read cursor
-        if (cursor.moveToFirst()) {
-            do {
-                CalendarData singleCalendar = new CalendarData();
-                singleCalendar.setId(cursor.getLong(0));
-                singleCalendar.setDisplayName(cursor.getString(1));
-                singleCalendar.setAccountName(cursor.getString(2));
-                singleCalendar.setAccountType(cursor.getString(3));
-                allCalendars.add(singleCalendar);
-            } while (cursor.moveToNext());
-        }
-        //always close cursor!!
-        cursor.close();
 
+        //get data from provider
+        cursor =
+                mContext.getContentResolver().
+                        query(Calendars.CONTENT_URI,
+                                query,
+                                Calendars.VISIBLE + " = 1",
+                                null,
+                                Calendars._ID + " ASC");
+        if (cursor != null) {
+            //read cursor
+            if (cursor.moveToFirst()) {
+                do {
+                    CalendarData singleCalendar = new CalendarData();
+                    singleCalendar.setId(cursor.getLong(0));
+                    singleCalendar.setDisplayName(cursor.getString(1));
+                    singleCalendar.setAccountName(cursor.getString(2));
+                    singleCalendar.setAccountType(cursor.getString(3));
+                    allCalendars.add(singleCalendar);
+                } while (cursor.moveToNext());
+            }
+            //always close cursor!!
+            cursor.close();
+        }
         return allCalendars;
 
     }
@@ -84,22 +84,21 @@ public class CalendarDataSource {
                         Instances.END,
                         Instances.EVENT_ID};
         Cursor cursor;
-        do {
-            //cursor get needed data
-            cursor =
-                    Instances.query(mContext.getContentResolver(), instanceQuery, beginMillis, endMillis);
-        } while (cursor == null);
-        if (cursor.moveToFirst()) {
-            do {
-                //save id of every event this day
-                EventData singleEvent = new EventData();
-                singleEvent.setId(cursor.getLong(3));
-                allEvents.add(singleEvent);
-            } while (cursor.moveToNext());
+        //cursor get needed data
+        cursor =
+                Instances.query(mContext.getContentResolver(), instanceQuery, beginMillis, endMillis);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                do {
+                    //save id of every event this day
+                    EventData singleEvent = new EventData();
+                    singleEvent.setId(cursor.getLong(3));
+                    allEvents.add(singleEvent);
+                } while (cursor.moveToNext());
+            }
+            //always close cursor!!
+            cursor.close();
         }
-        //always close cursor!!
-        cursor.close();
-
 
         ////////// now searching for details of events from Events table
 
@@ -114,28 +113,26 @@ public class CalendarDataSource {
         for (int i = 0; i < allEvents.size(); i++) {
 
             Cursor eventCursor;
-            do {
 
+            //cursor get needed data
+            eventCursor =
+                    mContext.getContentResolver().
+                            query(
+                                    Events.CONTENT_URI,
+                                    eventQuery,
+                                    Events._ID + " = ? ",
+                                    new String[]{Long.toString(allEvents.get(i).getId())},
+                                    null);
+            if (eventCursor != null) {
+                //convert data from cursor0
+                if (eventCursor.moveToFirst()) {
 
-                //cursor get needed data
-                eventCursor =
-                        mContext.getContentResolver().
-                                query(
-                                        Events.CONTENT_URI,
-                                        eventQuery,
-                                        Events._ID + " = ? ",
-                                        new String[]{Long.toString(allEvents.get(i).getId())},
-                                        null);
-
-            } while (eventCursor == null);
-            //convert data from cursor0
-            if (eventCursor.moveToFirst()) {
-
-                allEvents.get(i).setTitle(eventCursor.getString(1));
-                allEvents.get(i).setColor(eventCursor.getString(2));
+                    allEvents.get(i).setTitle(eventCursor.getString(1));
+                    allEvents.get(i).setColor(eventCursor.getString(2));
+                }
+                //always close cursor!!
+                eventCursor.close();
             }
-            //always close cursor!!
-            eventCursor.close();
         }
 
 
