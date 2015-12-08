@@ -28,15 +28,16 @@ public class WeekActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private ImageView toolBarImage;
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
-    private TextView mToolbarSubtittle;
+    private TextView mToolbarSubtitle;
     private List<String> mMonthStrings;
     private List<String> mMonthPictureStrings;
     private LruCache<String, Bitmap> mMemoryCache;
+    private Integer mPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Log.d("method","onCreate");
         mMonthStrings = new ArrayList<>(Arrays.asList(
                 getString(R.string.january),
                 getString(R.string.february),
@@ -67,36 +68,43 @@ public class WeekActivity extends AppCompatActivity {
 
         setContentView(R.layout.week_view_pager);
 
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
         thisWeek = calendar.get(Calendar.WEEK_OF_YEAR);
         //get image for toolbar
         toolBarImage = (ImageView) findViewById(R.id.tool_image);
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        mToolbarSubtittle = (TextView) findViewById(R.id.week_subtitle);
+        mToolbarSubtitle = (TextView) findViewById(R.id.week_subtitle);
         //make cash for images
         final int cacheSize = 2 * 1024 * 1024;
         mMemoryCache = new LruCache<String, Bitmap>(cacheSize);
         //put first image to cash
+        if(savedInstanceState != null){
+            calendar.add(Calendar.WEEK_OF_YEAR, savedInstanceState.getInt("position") - MAX_PAGE / 2);
+        }
         String currentMonthStr = mMonthPictureStrings.get(calendar.get(Calendar.MONTH));
         Bitmap currentMonthPic = BitmapFactory.decodeResource(getResources(),
                 getResources().getIdentifier(currentMonthStr, "drawable", getPackageName()));
         addBitmapToMemoryCache(currentMonthStr, currentMonthPic);
         currentMonthPic = null;
         currentMonthStr = null;
-        setActionBarStyle(MAX_PAGE/2);
 
         //set ViewPager
         WeekPageAdapter mWeekPageAdapter = new WeekPageAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.week_viewpager);
         mViewPager.setAdapter(mWeekPageAdapter);
-        mViewPager.setCurrentItem(MAX_PAGE / 2);
+        if(savedInstanceState != null) {
+            setActionBarStyle(savedInstanceState.getInt("position"));
+            mViewPager.setCurrentItem(savedInstanceState.getInt("position"));
+        } else {
+            setActionBarStyle(MAX_PAGE / 2);
+            mViewPager.setCurrentItem(MAX_PAGE / 2);
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
 
         //listen change fragments
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -157,7 +165,7 @@ public class WeekActivity extends AppCompatActivity {
 //    }
 
     public class WeekPageAdapter extends FragmentStatePagerAdapter {
-        
+
 
         public WeekPageAdapter(FragmentManager fm) {
             super(fm);
@@ -177,6 +185,7 @@ public class WeekActivity extends AppCompatActivity {
     }
 
     public void setActionBarStyle(int position) {
+        mPosition = position;
         int currentMonth = getCalendarFromPosition(position).get(Calendar.MONTH);
         String title = mMonthStrings.get(currentMonth);
         String picture = mMonthPictureStrings.get(currentMonth);
@@ -186,7 +195,7 @@ public class WeekActivity extends AppCompatActivity {
             int weekOfTheYear = position - MAX_PAGE / 2;
             //set title
             mCollapsingToolbarLayout.setTitle(title);
-            mToolbarSubtittle.setText(subtitle);
+            mToolbarSubtitle.setText(subtitle);
             Log.d("year",subtitle);
             //get month color
             String monthString = picture + "_day_title";
@@ -194,9 +203,17 @@ public class WeekActivity extends AppCompatActivity {
             //set colors
             mCollapsingToolbarLayout.setCollapsedTitleTextColor(color);
             mCollapsingToolbarLayout.setExpandedTitleColor(color);
-            mToolbarSubtittle.setTextColor(color);
+            mToolbarSubtitle.setTextColor(color);
             //set image
-            toolBarImage.setImageBitmap(getBitmapFromMemCache(picture));
+            Bitmap bitmap = getBitmapFromMemCache(picture);
+            if (bitmap != null) {
+                toolBarImage.setImageBitmap(bitmap);
+                Log.d("picture", "bitmap");
+            } else {
+                Log.d("picture",picture);
+                toolBarImage.setImageResource(getResources().getIdentifier(picture, "drawable", getPackageName()));
+            }
+            bitmap = null;
             monthString = null;
             //in new thread cash images for nest months
             final int MONTH = currentMonth;
@@ -253,11 +270,19 @@ public class WeekActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mToolbarSubtittle = null;
+        mToolbarSubtitle = null;
         mViewPager = null;
         mCollapsingToolbarLayout = null;
         mMonthPictureStrings = null;
+        mMemoryCache = null;
         mMonthStrings = null;
+        mPosition = null;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putInt("position", mPosition);
     }
 }
 
