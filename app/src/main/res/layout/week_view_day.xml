@@ -1,34 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-<LinearLayout
-              android:id="@+id/day_linear_layout"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="@dimen/week_day_height"
-              android:layout_marginRight="@dimen/activitu_half_margin"
-              android:layout_marginLeft="@dimen/activitu_half_margin"
-              android:layout_marginTop="@dimen/activity_vertical_margin"
-              android:background="@drawable/stroke_shape">
-    <TextView
-        android:id="@+id/day_name_text_view"
-        style="@style/day_title"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/day_linear_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="false"
-        android:duplicateParentState="true"
-        android:gravity="center_horizontal"
-        android:paddingTop="4dp"
-        />
+        android:layout_height="@dimen/week_day_height"
+        android:layout_marginLeft="@dimen/activitu_half_margin"
+        android:layout_marginRight="@dimen/activitu_half_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:background="@drawable/stroke_shape"
+        android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/day_name_text_view"
+            style="@style/day_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:duplicateParentState="true"
+            android:gravity="center_horizontal"
+            android:paddingTop="4dp"
+            />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/single_day_recyclerview"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:padding="8dp"/>
-</LinearLayout>
+        <TextView
+            android:id="@+id/week_view_event_0"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:duplicateParentState="true"
+            android:gravity="center_horizontal"
+            android:paddingTop="4dp"
+            android:textColor="@color/just_text"/>
+            />
+
+        <TextView
+            android:id="@+id/week_view_event_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:duplicateParentState="true"
+            android:gravity="center_horizontal"
+            android:paddingTop="4dp"
+            android:textColor="@color/just_text"/>
+            />
+
+        <TextView
+            android:id="@+id/week_view_event_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:duplicateParentState="true"
+            android:gravity="center_horizontal"
+            android:paddingTop="4dp"
+            android:textColor="@color/just_text"/>
+            />
+
+        <TextView
+            android:id="@+id/week_view_event_num"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:duplicateParentState="true"
+            android:gravity="center_horizontal"
+            android:paddingTop="4dp"
+            android:textColor="@color/just_text"/>
+            />
+
+    </LinearLayout>
+
     <TextView
         android:id="@+id/day_button"
         android:layout_width="match_parent"
