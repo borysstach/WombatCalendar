@@ -11,7 +11,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.util.LruCache;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,7 +27,8 @@ public class WeekActivity extends AppCompatActivity {
 
     private ViewPager mViewPager;
     private ImageView toolBarImage;
-    public CollapsingToolbarLayout collapsingToolbarLayout;
+    private CollapsingToolbarLayout mCollapsingToolbarLayout;
+    private TextView mToolbarSubtittle;
     private List<String> mMonthStrings;
     private List<String> mMonthPictureStrings;
     private LruCache<String, Bitmap> mMemoryCache;
@@ -64,19 +67,24 @@ public class WeekActivity extends AppCompatActivity {
 
         setContentView(R.layout.week_view_pager);
 
-        Calendar mCalendar = Calendar.getInstance();
-        mCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        thisWeek = mCalendar.get(Calendar.WEEK_OF_YEAR);
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        thisWeek = calendar.get(Calendar.WEEK_OF_YEAR);
         //get image for toolbar
         toolBarImage = (ImageView) findViewById(R.id.tool_image);
-        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-
+        mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        mToolbarSubtittle = (TextView) findViewById(R.id.week_subtitle);
         //make cash for images
         final int cacheSize = 2 * 1024 * 1024;
         mMemoryCache = new LruCache<String, Bitmap>(cacheSize);
         //put first image to cash
-        String currentMonthStr = mMonthPictureStrings.get(mCalendar.get(Calendar.MONTH));
+        String currentMonthStr = mMonthPictureStrings.get(calendar.get(Calendar.MONTH));
         Bitmap currentMonthPic = BitmapFactory.decodeResource(getResources(),
                 getResources().getIdentifier(currentMonthStr, "drawable", getPackageName()));
         addBitmapToMemoryCache(currentMonthStr, currentMonthPic);
@@ -89,11 +97,6 @@ public class WeekActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.week_viewpager);
         mViewPager.setAdapter(mWeekPageAdapter);
         mViewPager.setCurrentItem(MAX_PAGE / 2);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
 
         //listen change fragments
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -154,8 +157,7 @@ public class WeekActivity extends AppCompatActivity {
 //    }
 
     public class WeekPageAdapter extends FragmentStatePagerAdapter {
-
-        private FragmentManager mFragmentManager;
+        
 
         public WeekPageAdapter(FragmentManager fm) {
             super(fm);
@@ -175,20 +177,24 @@ public class WeekActivity extends AppCompatActivity {
     }
 
     public void setActionBarStyle(int position) {
-        int currentMonth = getMonth(position);
+        int currentMonth = getCalendarFromPosition(position).get(Calendar.MONTH);
         String title = mMonthStrings.get(currentMonth);
         String picture = mMonthPictureStrings.get(currentMonth);
+        String subtitle = "" + (getCalendarFromPosition(position).get(Calendar.YEAR));
         //check if change layout is needed
-        if (collapsingToolbarLayout.getTitle() != title) {
+        if (mCollapsingToolbarLayout.getTitle() != title) {
             int weekOfTheYear = position - MAX_PAGE / 2;
             //set title
-            collapsingToolbarLayout.setTitle(title);
+            mCollapsingToolbarLayout.setTitle(title);
+            mToolbarSubtittle.setText(subtitle);
+            Log.d("year",subtitle);
             //get month color
             String monthString = picture + "_day_title";
             int color = ContextCompat.getColor(this, getResources().getIdentifier(monthString, "color", getPackageName()));
             //set colors
-            collapsingToolbarLayout.setCollapsedTitleTextColor(color);
-            collapsingToolbarLayout.setExpandedTitleColor(color);
+            mCollapsingToolbarLayout.setCollapsedTitleTextColor(color);
+            mCollapsingToolbarLayout.setExpandedTitleColor(color);
+            mToolbarSubtittle.setTextColor(color);
             //set image
             toolBarImage.setImageBitmap(getBitmapFromMemCache(picture));
             monthString = null;
@@ -234,16 +240,25 @@ public class WeekActivity extends AppCompatActivity {
     }
 
     //get month from ViewPagerPosition
-    public static int getMonth(int position) {
+    public static Calendar getCalendarFromPosition(int position) {
         //get data from first page
         Calendar tempCalendar = Calendar.getInstance();
         //set first day
         tempCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
         //add scrolled pages
         tempCalendar.add(Calendar.WEEK_OF_YEAR, position - MAX_PAGE / 2);
-        return tempCalendar.get(Calendar.MONTH);
+        return tempCalendar;
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mToolbarSubtittle = null;
+        mViewPager = null;
+        mCollapsingToolbarLayout = null;
+        mMonthPictureStrings = null;
+        mMonthStrings = null;
+    }
 }
 
 

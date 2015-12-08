@@ -30,8 +30,8 @@ public class WeekFragment extends Fragment {
     private List<String> mDaysStrings;
     private List<String> mMonthColorStrings;
     private Calendar mCalendar;
-    public int currentMonth;
-    private int mNumberOfFragment;
+    public Integer currentMonth;
+    private Integer mNumberOfFragment;
 
 
     static WeekFragment newInstance(int num) {
@@ -225,6 +225,15 @@ public class WeekFragment extends Fragment {
         mCalendar.add(Calendar.WEEK_OF_YEAR, (mNumberOfFragment));
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mMonthColorStrings = null;
+        mCalendar = null;
+        mDaysStrings = null;
+        mNumberOfFragment = null;
+        currentMonth = null;
+    }
 }
 
 

@@ -17,8 +17,9 @@
             android:layout_height="match_parent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             android:fitsSystemWindows="true"
-            app:expandedTitleMarginStart="48dp"
-            app:expandedTitleMarginEnd="64dp">
+            app:expandedTitleMarginStart="24dp"
+            app:expandedTitleMarginEnd="64dp"
+            app:expandedTitleMarginBottom="24dp">
 
             <ImageView
                 android:id="@+id/tool_image"
@@ -28,13 +29,25 @@
                 android:fitsSystemWindows="true"
                 app:layout_collapseMode="parallax"
                 android:padding="@dimen/image_padding"/>
+            <TextView
+                android:id="@+id/week_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="24dp"
+                app:popupTheme="@style/AppTheme.Base"
+                app:layout_collapseMode="parallax"
+                android:textSize="52sp"
+                android:alpha="0.3"
+                android:layout_gravity="center_vertical|left"
+                android:gravity="center_vertical"/>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:popupTheme="@style/AppTheme.Base"
-                app:layout_collapseMode="pin"/>
+                app:layout_collapseMode="pin"
+                app:layout_scrollFlags="scroll|enterAlways"/>
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
