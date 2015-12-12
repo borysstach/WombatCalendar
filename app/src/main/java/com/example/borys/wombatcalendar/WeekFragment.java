@@ -24,31 +24,27 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-
 public class WeekFragment extends Fragment {
 
     private List<String> mDaysStrings;
     private List<String> mMonthColorStrings;
     private Calendar mCalendar;
-    public Integer currentMonth;
+    private Integer mCurrentMonth;
     private Integer mNumberOfFragment;
 
-
     static WeekFragment newInstance(int num) {
-        WeekFragment fragment = new WeekFragment();
 
+        WeekFragment fragment = new WeekFragment();
         Bundle args = new Bundle();
         args.putInt("num", num);
         fragment.setArguments(args);
         return fragment;
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //get data from Pager
-        mNumberOfFragment = getArguments().getInt("num");
+
         mDaysStrings = new ArrayList<>(Arrays.asList(
                 getString(R.string.monday),
                 getString(R.string.tuesday),
@@ -72,8 +68,11 @@ public class WeekFragment extends Fragment {
                 getString(R.string.p_november),
                 getString(R.string.p_december)));
 
-        setData();
-        currentMonth = mCalendar.get(Calendar.MONTH);
+        mNumberOfFragment = getArguments().getInt("num");
+        mCalendar = Calendar.getInstance();
+        mCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        mCalendar.add(Calendar.WEEK_OF_YEAR, (mNumberOfFragment));
+        mCurrentMonth = mCalendar.get(Calendar.MONTH);
 
     }
 
@@ -81,18 +80,14 @@ public class WeekFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        //find rootView with RecyclerView
         View rootView = inflater.inflate(R.layout.week_view_fragment, container, false);
-        //create Grid Recycler View for whole week
         RecyclerView mWeekRecyclerView = (RecyclerView) rootView.findViewById(R.id.week_recycler_view);
         mWeekRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         mWeekRecyclerView.setAdapter(new DayOfWeekRecyclerAdapter());
-
         return rootView;
     }
 
-
-    ///////////////////////////////////////////////////  RecyclerView for Week Grid  ////////////////////////////////
+    ////////////////////////////             VIEW HOLDER
 
     public class DayOfWeekViewHolder extends RecyclerView.ViewHolder {
 
@@ -101,6 +96,7 @@ public class WeekFragment extends Fragment {
         private TextView mEventNum;
         private LinearLayout mLinearLayout;
         private Calendar cloneCalendar;
+        private TextView mNewActivityButton;
 
         public DayOfWeekViewHolder(View itemView) {
             super(itemView);
@@ -110,23 +106,33 @@ public class WeekFragment extends Fragment {
             mEventViews.add((TextView) itemView.findViewById(R.id.week_view_event_1));
             mEventViews.add((TextView) itemView.findViewById(R.id.week_view_event_2));
             mEventNum = (TextView) itemView.findViewById(R.id.week_view_event_num);
+            mNewActivityButton= (TextView) itemView.findViewById(R.id.day_button);
+            mLinearLayout = (LinearLayout) itemView.findViewById(R.id.day_linear_layout);
+
+        }
+
+        public void bindDay(String dayName) {
+
+            cloneCalendar = (Calendar) mCalendar.clone();
+            mDayName.setText(dayName);
+
             //change color depend of month
-            String monthString = mMonthColorStrings.get(currentMonth) + "_day_title";
-            int thisMonthColor = ContextCompat.getColor(getActivity(), getActivity().getResources().getIdentifier(monthString, "color", getActivity().getPackageName()));
+            String monthString = mMonthColorStrings.get(mCurrentMonth) + "_day_title";
+            Integer thisMonthColor = ContextCompat.getColor(getActivity(), getActivity().getResources().getIdentifier(monthString, "color", getActivity().getPackageName()));
             mDayName.setTextColor(thisMonthColor);
+
             //get stroke width
             Resources resources = getResources();
             float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, resources.getDisplayMetrics());
-            int intPx = Math.round(px);
+            Integer intPx = Math.round(px);
+
             //change stroke color depend of month
             GradientDrawable strokeDrawable = (GradientDrawable) ContextCompat.getDrawable(getActivity(), getActivity().getResources().getIdentifier("stroke_shape", "drawable", getActivity().getPackageName()));
-            String monthColorString = mMonthColorStrings.get(currentMonth) + "_stroke";
+            String monthColorString = mMonthColorStrings.get(mCurrentMonth) + "_stroke";
             strokeDrawable.setStroke(intPx, ContextCompat.getColor(getActivity(), getActivity().getResources().getIdentifier(monthColorString, "color", getActivity().getPackageName())));
-            mLinearLayout = (LinearLayout) itemView.findViewById(R.id.day_linear_layout);
             mLinearLayout.setBackground(strokeDrawable);
-            //set
-            TextView newActivityButton = (TextView) itemView.findViewById(R.id.day_button);
-            newActivityButton.setOnClickListener(new View.OnClickListener() {
+
+            mNewActivityButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), DayActivity.class);
@@ -136,23 +142,20 @@ public class WeekFragment extends Fragment {
                     startActivity(intent);
                 }
             });
-        }
 
-        public void bindDay(String dayName) {
-            //bind data to view
-            mDayName.setText(dayName);
-            //get current calendar data to start activty intent
-            cloneCalendar = (Calendar) mCalendar.clone();
+            strokeDrawable = null;
+            monthColorString = null;
+            thisMonthColor = null;
+            resources = null;
+            intPx = null;
+
             //new thread to get data from content provider
             new Thread(new Runnable() {
                 public void run() {
-                    //getting data
                     CalendarDataSource readerEvents = new CalendarDataSource(getContext());
                     final List<EventData> events = readerEvents.getEventsFromDay(cloneCalendar);
-                    //to prevent null exeption
-                    if (getActivity() == null)
-                        return;
-                    //back to UI thread
+                    if (getActivity() == null) return;
+
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -170,59 +173,38 @@ public class WeekFragment extends Fragment {
                                     mEventNum.setText("+" + (events.size() - 3));
                                 }
                             }
-
                         }
                     });
                 }
             }).start();
         }
-
-
     }
 
+    ////////////////////////////             ADAPTER
 
     public class DayOfWeekRecyclerAdapter extends RecyclerView.Adapter<DayOfWeekViewHolder> {
 
         @Override
         public DayOfWeekViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            //inflate layout to ViewHolder
+
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
             View view = layoutInflater.inflate(R.layout.week_view_day, parent, false);
-
-            //return new ViewHolder with layout
             return new DayOfWeekViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(DayOfWeekViewHolder holder, int position) {
-            //bind data from mDays list
-            if (position != 0) {
-                //add one day in next day after monday
-                mCalendar.add(Calendar.DAY_OF_WEEK, 1);
-            }
-            //set number of day for this day of week
+
             int day = mCalendar.get(Calendar.DAY_OF_MONTH);
             String dayName = mDaysStrings.get(position);
             holder.bindDay(dayName + "  " + day);
-            //make recyclerView with list of this day events
-
+            mCalendar.add(Calendar.DAY_OF_WEEK, 1);
         }
 
         @Override
         public int getItemCount() {
             return mDaysStrings.size();
         }
-    }
-
-
-    /**
-     * Method set data to current week
-     */
-    public void setData() {
-        //set calendar to current showing week
-        mCalendar = Calendar.getInstance();
-        mCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        mCalendar.add(Calendar.WEEK_OF_YEAR, (mNumberOfFragment));
     }
 
     @Override
@@ -232,7 +214,7 @@ public class WeekFragment extends Fragment {
         mCalendar = null;
         mDaysStrings = null;
         mNumberOfFragment = null;
-        currentMonth = null;
+        mCurrentMonth = null;
     }
 }
 

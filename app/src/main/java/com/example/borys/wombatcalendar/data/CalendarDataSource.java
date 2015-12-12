@@ -61,6 +61,9 @@ public class CalendarDataSource {
     }
 
     public List<EventData> getEventsFromDay(Calendar calendar) {
+
+        List<EventData> allEvents = new ArrayList<>();
+
         Calendar beginCalendar = Calendar.getInstance();
         beginCalendar.setTimeZone(TimeZone.getTimeZone("GMT"));
         beginCalendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), 0, 1);
@@ -68,11 +71,8 @@ public class CalendarDataSource {
         endaCalendar.setTimeZone(TimeZone.getTimeZone("GMT"));
         endaCalendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), 23, 59);
 
-        //convert Callendar data to millis
         long beginMillis = beginCalendar.getTimeInMillis();
         long endMillis = endaCalendar.getTimeInMillis();
-        //list of all events this day
-        List<EventData> allEvents = new ArrayList<>();
 
         ///////////searching for Events id this day from Instances table
 
@@ -85,8 +85,7 @@ public class CalendarDataSource {
                         Instances.EVENT_ID};
         Cursor cursor;
         //cursor get needed data
-        cursor =
-                Instances.query(mContext.getContentResolver(), instanceQuery, beginMillis, endMillis);
+        cursor = Instances.query(mContext.getContentResolver(), instanceQuery, beginMillis, endMillis);
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 do {
@@ -113,20 +112,18 @@ public class CalendarDataSource {
         for (int i = 0; i < allEvents.size(); i++) {
 
             Cursor eventCursor;
-
             //cursor get needed data
-            eventCursor =
-                    mContext.getContentResolver().
+            eventCursor = mContext.getContentResolver().
                             query(
                                     Events.CONTENT_URI,
                                     eventQuery,
                                     Events._ID + " = ? ",
                                     new String[]{Long.toString(allEvents.get(i).getId())},
                                     null);
+
             if (eventCursor != null) {
                 //convert data from cursor0
                 if (eventCursor.moveToFirst()) {
-
                     allEvents.get(i).setTitle(eventCursor.getString(1));
                     allEvents.get(i).setColor(eventCursor.getString(2));
                 }
@@ -134,9 +131,6 @@ public class CalendarDataSource {
                 eventCursor.close();
             }
         }
-
-
         return allEvents;
-
     }
 }

@@ -36,22 +36,16 @@ public class DayFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         mCalendar.set(getArguments().getInt("year"), getArguments().getInt("month"), getArguments().getInt("day"));
         mCalendar.add(Calendar.DAY_OF_MONTH, getArguments().getInt("position"));
         CalendarDataSource readerEvents = new CalendarDataSource(getContext());
-        //set adapter with all events this day
         mEvents = readerEvents.getEventsFromDay(mCalendar);
-
-
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        //find rootView with RecyclerView
         View rootView = inflater.inflate(R.layout.day_view, container, false);
-        //create events Recycler View
         RecyclerView mDayRecyclerView = (RecyclerView) rootView.findViewById(R.id.day_events_recycler);
         mDayRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mDayRecyclerView.setAdapter(new SingleDayRecyclerAdapter());
@@ -59,51 +53,43 @@ public class DayFragment extends Fragment {
         return rootView;
     }
 
-    ////////////////////////////             VIEW HOLDERS
+    ////////////////////////////             VIEW HOLDER
 
     public class SingleDayViewHolder extends RecyclerView.ViewHolder {
 
         private TextView mEventTitle;
 
-
         public SingleDayViewHolder(View itemView) {
             super(itemView);
-            //find view
+
             mEventTitle = (TextView) itemView.findViewById(R.id.specific_time_event_name);
         }
-
-
         public void bindEvent(EventData event) {
             mEventTitle.setText(event.getTitle());
         }
     }
 
-
-    ////////////////////////////             ADAPTERS
+    ////////////////////////////             ADAPTER
 
     public class SingleDayRecyclerAdapter extends RecyclerView.Adapter<SingleDayViewHolder> {
-
 
         @Override
         public SingleDayViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-            //inflate layout to ViewHolder
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
             View view = layoutInflater.inflate(R.layout.day_event_layout, parent, false);
 
-            //return new ViewHolder with layout
             return new SingleDayViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(SingleDayViewHolder holder, int position) {
-            //bind data
+
             if (!mEvents.isEmpty()) {
                 EventData event = mEvents.get(position);
                 holder.bindEvent(event);
             }
         }
-
 
         @Override
         public int getItemCount() {

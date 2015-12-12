@@ -6,13 +6,9 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,27 +19,18 @@ public class DayActivity extends AppCompatActivity {
 
     public static final int MAX_PAGE = 200;
 
-    private DayPageAdapter mDayPageAdapter;
-    private ViewPager mViewPager;
     private Calendar mCalendar;
     private int mYear;
     private int mMonth;
     private int mDay;
-    private ImageView toolBarImage;
-    public CollapsingToolbarLayout collapsingToolbarLayout;
-
-
+    private CollapsingToolbarLayout mCollapsingToolbarLayout;
     private List<String> mDaysStrings;
 
-    private List<String> mMonthStrings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.day_view_pager);
-//
-//        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-//        setSupportActionBar(myToolbar);
 
         mDaysStrings = new ArrayList<>(Arrays.asList(
                 getString(R.string.sunday),
@@ -54,19 +41,6 @@ public class DayActivity extends AppCompatActivity {
                 getString(R.string.friday),
                 getString(R.string.saturday)));
 
-        mMonthStrings = new ArrayList<>(Arrays.asList(
-                getString(R.string.january),
-                getString(R.string.february),
-                getString(R.string.march),
-                getString(R.string.april),
-                getString(R.string.may),
-                getString(R.string.june),
-                getString(R.string.julay),
-                getString(R.string.august),
-                getString(R.string.september),
-                getString(R.string.october),
-                getString(R.string.november),
-                getString(R.string.december)));
 
         mCalendar = Calendar.getInstance();
         Intent intent = getIntent();
@@ -75,41 +49,15 @@ public class DayActivity extends AppCompatActivity {
         mDay = intent.getIntExtra("day",1);
         mCalendar.set(mYear, mMonth, mDay);
 
-        mDayPageAdapter = new DayPageAdapter(getSupportFragmentManager());
-        mViewPager = (ViewPager) findViewById(R.id.day_viewpager);
+        DayPageAdapter mDayPageAdapter = new DayPageAdapter(getSupportFragmentManager());
+        ViewPager mViewPager = (ViewPager) findViewById(R.id.day_viewpager);
         mViewPager.setAdapter(mDayPageAdapter);
         mViewPager.setCurrentItem(MAX_PAGE / 2);
 
-        //get image for toolbar
-        toolBarImage = (ImageView) findViewById(R.id.tool_image);
-        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
     }
 
     public class DayPageAdapter extends FragmentStatePagerAdapter {
-
 
         public DayPageAdapter(FragmentManager fm) {
             super(fm);
@@ -117,7 +65,6 @@ public class DayActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-
             return DayFragment.newInstance(mYear, mMonth, mDay, position - MAX_PAGE / 2);
         }
 
@@ -126,7 +73,7 @@ public class DayActivity extends AppCompatActivity {
             super.setPrimaryItem(container, position, object);
             Calendar calendar = (Calendar) mCalendar.clone();
             calendar.add(Calendar.DAY_OF_MONTH, position - MAX_PAGE / 2);
-            //setActionBarTitle((mDaysStrings.get(calendar.get(Calendar.DAY_OF_WEEK) - 1) + " "+ calendar.get(Calendar.DAY_OF_MONTH)));
+            mCollapsingToolbarLayout.setTitle((mDaysStrings.get(calendar.get(Calendar.DAY_OF_WEEK) - 1) + " " + calendar.get(Calendar.DAY_OF_MONTH)));
         }
 
         @Override
@@ -135,13 +82,25 @@ public class DayActivity extends AppCompatActivity {
         }
     }
 
-    public void setActionBarStyle(String title, String picture) {
-        collapsingToolbarLayout.setTitle(title);
-        String monthString = picture + "_day_title";
-        int color = ContextCompat.getColor(this, getResources().getIdentifier(monthString, "color", getPackageName()));
-        collapsingToolbarLayout.setCollapsedTitleTextColor(color);
-        collapsingToolbarLayout.setExpandedTitleColor(color);
-        toolBarImage.setImageResource(getResources().getIdentifier(picture, "drawable", getPackageName()));
-        supportInvalidateOptionsMenu();
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.menu_main, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 }
