@@ -2,8 +2,6 @@ package com.example.borys.wombatcalendar.data;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.provider.CalendarContract.Calendars;
-import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract.Instances;
 
 import java.util.ArrayList;
@@ -21,58 +19,9 @@ public class CalendarDataSource {
         mContext = context;
     }
 
-    public List<CalendarData> getAllCalendars() {
-        //list of calendars to return
-        List<CalendarData> allCalendars = new ArrayList<>();
-        //list of columns witch we want from provider
-        String[] query =
-                new String[]{
-                        Calendars._ID,
-                        Calendars.NAME,
-                        Calendars.ACCOUNT_NAME,
-                        Calendars.ACCOUNT_TYPE};
-        Cursor cursor;
-
-        //get data from provider
-        cursor =
-                mContext.getContentResolver().
-                        query(Calendars.CONTENT_URI,
-                                query,
-                                Calendars.VISIBLE + " = 1",
-                                null,
-                                Calendars._ID + " ASC");
-        if (cursor != null) {
-            //read cursor
-            if (cursor.moveToFirst()) {
-                do {
-                    CalendarData singleCalendar = new CalendarData();
-                    singleCalendar.setId(cursor.getLong(0));
-                    singleCalendar.setDisplayName(cursor.getString(1));
-                    singleCalendar.setAccountName(cursor.getString(2));
-                    singleCalendar.setAccountType(cursor.getString(3));
-                    allCalendars.add(singleCalendar);
-                } while (cursor.moveToNext());
-            }
-            //always close cursor!!
-            cursor.close();
-        }
-        return allCalendars;
-
-    }
-
-    public List<EventData> getEventsFromDay(Calendar calendar) {
+    public List<EventData> getEvents(long beginMillis, long endMillis) {
 
         List<EventData> allEvents = new ArrayList<>();
-
-        Calendar beginCalendar = Calendar.getInstance();
-        beginCalendar.setTimeZone(TimeZone.getTimeZone("GMT"));
-        beginCalendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), 0, 1);
-        Calendar endaCalendar = Calendar.getInstance();
-        endaCalendar.setTimeZone(TimeZone.getTimeZone("GMT"));
-        endaCalendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), 23, 59);
-
-        long beginMillis = beginCalendar.getTimeInMillis();
-        long endMillis = endaCalendar.getTimeInMillis();
 
         ///////////searching for Events id this day from Instances table
 
@@ -82,6 +31,8 @@ public class CalendarDataSource {
                         Instances._ID,
                         Instances.BEGIN,
                         Instances.END,
+                        Instances.TITLE,
+                        Instances.ALL_DAY,
                         Instances.EVENT_ID};
         Cursor cursor;
         //cursor get needed data
@@ -91,7 +42,11 @@ public class CalendarDataSource {
                 do {
                     //save id of every event this day
                     EventData singleEvent = new EventData();
-                    singleEvent.setId(cursor.getLong(3));
+                    singleEvent.setBegin(cursor.getLong(1));
+                    singleEvent.setEnd(cursor.getLong(2));
+                    singleEvent.setTitle(cursor.getString(3));
+                    singleEvent.setAllDay(cursor.getInt(4));
+                    singleEvent.setId(cursor.getLong(5));
                     allEvents.add(singleEvent);
                 } while (cursor.moveToNext());
             }
@@ -99,38 +54,61 @@ public class CalendarDataSource {
             cursor.close();
         }
 
-        ////////// now searching for details of events from Events table
-
-        //what we want from data
-        String[] eventQuery =
-                new String[]{
-                        Events._ID,
-                        Events.TITLE,
-                        Events.EVENT_COLOR,
-                };
-
-        for (int i = 0; i < allEvents.size(); i++) {
-
-            Cursor eventCursor;
-            //cursor get needed data
-            eventCursor = mContext.getContentResolver().
-                            query(
-                                    Events.CONTENT_URI,
-                                    eventQuery,
-                                    Events._ID + " = ? ",
-                                    new String[]{Long.toString(allEvents.get(i).getId())},
-                                    null);
-
-            if (eventCursor != null) {
-                //convert data from cursor0
-                if (eventCursor.moveToFirst()) {
-                    allEvents.get(i).setTitle(eventCursor.getString(1));
-                    allEvents.get(i).setColor(eventCursor.getString(2));
-                }
-                //always close cursor!!
-                eventCursor.close();
-            }
-        }
         return allEvents;
     }
+
+    public static long getBeginInMillis (Calendar calendar) {
+        Calendar beginCalendar = Calendar.getInstance();
+        beginCalendar.setTimeZone(TimeZone.getTimeZone("GMT"));
+        beginCalendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), 0, 1);
+        return beginCalendar.getTimeInMillis();
+    }
+
+    public static long getEndInMillis(Calendar calendar) {
+        Calendar endCalendar = Calendar.getInstance();
+        endCalendar.setTimeZone(TimeZone.getTimeZone("GMT"));
+        endCalendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), 23, 59);
+        return endCalendar.getTimeInMillis();
+    }
+
+
+//    public List<CalendarData> getAllCalendars() {
+//        //list of calendars to return
+//        List<CalendarData> allCalendars = new ArrayList<>();
+//        //list of columns witch we want from provider
+//        String[] query =
+//                new String[]{
+//                        Calendars._ID,
+//                        Calendars.NAME,
+//                        Calendars.ACCOUNT_NAME,
+//                        Calendars.ACCOUNT_TYPE};
+//        Cursor cursor;
+//
+//        //get data from provider
+//        cursor =
+//                mContext.getContentResolver().
+//                        query(Calendars.CONTENT_URI,
+//                                query,
+//                                Calendars.VISIBLE + " = 1",
+//                                null,
+//                                Calendars._ID + " ASC");
+//        if (cursor != null) {
+//            //read cursor
+//            if (cursor.moveToFirst()) {
+//                do {
+//                    CalendarData singleCalendar = new CalendarData();
+//                    singleCalendar.setId(cursor.getLong(0));
+//                    singleCalendar.setDisplayName(cursor.getString(1));
+//                    singleCalendar.setAccountName(cursor.getString(2));
+//                    singleCalendar.setAccountType(cursor.getString(3));
+//                    allCalendars.add(singleCalendar);
+//                } while (cursor.moveToNext());
+//            }
+//            //always close cursor!!
+//            cursor.close();
+//        }
+//        return allCalendars;
+//
+//    }
+
 }

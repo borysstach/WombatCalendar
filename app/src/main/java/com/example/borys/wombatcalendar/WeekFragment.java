@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +16,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.borys.wombatcalendar.data.CalendarDataSource;
+import com.example.borys.wombatcalendar.data.DayData;
 import com.example.borys.wombatcalendar.data.EventData;
+import com.example.borys.wombatcalendar.data.WeekData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,6 +32,7 @@ public class WeekFragment extends Fragment {
     private Calendar mCalendar;
     private Integer mCurrentMonth;
     private Integer mNumberOfFragment;
+    private WeekData mWeek;
 
     static WeekFragment newInstance(int num) {
 
@@ -73,7 +75,15 @@ public class WeekFragment extends Fragment {
         mCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
         mCalendar.add(Calendar.WEEK_OF_YEAR, (mNumberOfFragment));
         mCurrentMonth = mCalendar.get(Calendar.MONTH);
-
+        //new thread to get data from content provider
+        Calendar endOfWeek = Calendar.getInstance();
+        endOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        endOfWeek.add(Calendar.WEEK_OF_YEAR, (mNumberOfFragment));
+        CalendarDataSource readerEvents = new CalendarDataSource(getContext());
+        long begin = CalendarDataSource.getBeginInMillis(mCalendar);
+        long end = CalendarDataSource.getEndInMillis(endOfWeek);
+        mWeek = new WeekData(readerEvents.getEvents(begin, end));
+        endOfWeek = null;
     }
 
     @Override
@@ -106,9 +116,8 @@ public class WeekFragment extends Fragment {
             mEventViews.add((TextView) itemView.findViewById(R.id.week_view_event_1));
             mEventViews.add((TextView) itemView.findViewById(R.id.week_view_event_2));
             mEventNum = (TextView) itemView.findViewById(R.id.week_view_event_num);
-            mNewActivityButton= (TextView) itemView.findViewById(R.id.day_button);
+            mNewActivityButton = (TextView) itemView.findViewById(R.id.day_button);
             mLinearLayout = (LinearLayout) itemView.findViewById(R.id.day_linear_layout);
-
         }
 
         public void bindDay(String dayName) {
@@ -143,40 +152,28 @@ public class WeekFragment extends Fragment {
                 }
             });
 
+            DayData mDay = mWeek.get(cloneCalendar.get(Calendar.DAY_OF_WEEK));
+            if (mDay != null) {
+                List<EventData> mEvents = mDay.getEvents();
+                if (mEvents.size() < 3) {
+                    for (int i = 0; i < mEvents.size(); i++) {
+                        mEventViews.get(i).setText(mEvents.get(i).getTitle());
+                    }
+                } else {
+                    for (int i = 0; i < 3; i++) {
+                        mEventViews.get(i).setText(mEvents.get(i).getTitle());
+                    }
+                    if ((mEvents.size() - 3) > 0) {
+                        mEventNum.setText("+" + (mEvents.size() - 3));
+                    }
+                }
+            }
+            mDay = null;
             strokeDrawable = null;
             monthColorString = null;
             thisMonthColor = null;
             resources = null;
             intPx = null;
-
-            //new thread to get data from content provider
-            new Thread(new Runnable() {
-                public void run() {
-                    CalendarDataSource readerEvents = new CalendarDataSource(getContext());
-                    final List<EventData> events = readerEvents.getEventsFromDay(cloneCalendar);
-                    if (getActivity() == null) return;
-
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            //set data to views
-                            if (events.size() < 3) {
-                                for (int i = 0; i < events.size(); i++) {
-                                    mEventViews.get(i).setText(events.get(i).getTitle());
-                                    Log.d("UI", events.get(i).getTitle());
-                                }
-                            } else {
-                                for (int i = 0; i < 3; i++) {
-                                    mEventViews.get(i).setText(events.get(i).getTitle());
-                                }
-                                if ((events.size() - 3) > 0) {
-                                    mEventNum.setText("+" + (events.size() - 3));
-                                }
-                            }
-                        }
-                    });
-                }
-            }).start();
         }
     }
 

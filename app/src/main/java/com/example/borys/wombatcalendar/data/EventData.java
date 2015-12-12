@@ -3,9 +3,11 @@ package com.example.borys.wombatcalendar.data;
 
 public class EventData {
     private long mId;
-    private long mCalendarId;
     private String mTitle;
-    private String mColor;
+    private long mBegin;
+    private long mEnd;
+    private boolean mAllDay;
+
 
     public long getId() {
         return mId;
@@ -15,12 +17,28 @@ public class EventData {
         mId = id;
     }
 
-    public long getCalendarId() {
-        return mCalendarId;
+    public long getBegin() {
+        return mBegin;
     }
 
-    public void setCalendarId(long calendarId) {
-        mCalendarId = calendarId;
+    public void setBegin(long begin) {
+        mBegin = begin;
+    }
+
+    public long getEnd() {
+        return mEnd;
+    }
+
+    public void setEnd(long end) {
+        mEnd = end;
+    }
+
+    public boolean isAllDay() {
+        return mAllDay;
+    }
+
+    public void setAllDay(int allDay) {
+        mAllDay = (allDay == 1);
     }
 
     public String getTitle() {
@@ -31,11 +49,4 @@ public class EventData {
         mTitle = title;
     }
 
-    public String getColor() {
-        return mColor;
-    }
-
-    public void setColor(String color) {
-        mColor = color;
-    }
 }

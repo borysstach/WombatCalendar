@@ -39,7 +39,9 @@ public class DayFragment extends Fragment {
         mCalendar.set(getArguments().getInt("year"), getArguments().getInt("month"), getArguments().getInt("day"));
         mCalendar.add(Calendar.DAY_OF_MONTH, getArguments().getInt("position"));
         CalendarDataSource readerEvents = new CalendarDataSource(getContext());
-        mEvents = readerEvents.getEventsFromDay(mCalendar);
+        long begin = CalendarDataSource.getBeginInMillis(mCalendar);
+        long end = CalendarDataSource.getEndInMillis(mCalendar);
+        mEvents = readerEvents.getEvents(begin, end);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
