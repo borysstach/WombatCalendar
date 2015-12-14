@@ -1,4 +1,4 @@
-package com.example.borys.wombatcalendar.data;
+package com.stach.borys.wombatcalendar.data;
 
 import android.content.Context;
 import android.database.Cursor;

@@ -1,4 +1,4 @@
-package com.example.borys.wombatcalendar.data;
+package com.stach.borys.wombatcalendar.data;
 
 
 import java.util.Calendar;

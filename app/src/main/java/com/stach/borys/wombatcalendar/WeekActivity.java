@@ -1,4 +1,4 @@
-package com.example.borys.wombatcalendar;
+package com.stach.borys.wombatcalendar;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

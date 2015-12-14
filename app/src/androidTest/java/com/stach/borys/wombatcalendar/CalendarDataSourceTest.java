@@ -1,8 +1,8 @@
-package com.example.borys.wombatcalendar;
+package com.stach.borys.wombatcalendar;
 
 import android.test.AndroidTestCase;
 
-import com.example.borys.wombatcalendar.data.CalendarDataSource;
+import com.stach.borys.wombatcalendar.data.CalendarDataSource;
 
 public class CalendarDataSourceTest extends AndroidTestCase{
     public void readCalendar(){

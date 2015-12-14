@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.borys.wombatcalendar" >
+    package="com.stach.borys.wombatcalendar" >
 
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
@@ -11,7 +11,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".WeekActivity"
+            android:name="com.stach.borys.wombatcalendar.WeekActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,12 +20,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".DayActivity"
+            android:name="com.stach.borys.wombatcalendar.DayActivity"
             android:label="@string/title_activity_day"
-            android:parentActivityName=".WeekActivity" >
+            android:parentActivityName="com.stach.borys.wombatcalendar.WeekActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.borys.wombatcalendar.WeekActivity" />
+                android:value="com.stach.borys.wombatcalendar.WeekActivity" />
         </activity>
     </application>
 

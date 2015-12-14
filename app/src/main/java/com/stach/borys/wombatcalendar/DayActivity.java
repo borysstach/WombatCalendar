@@ -1,4 +1,4 @@
-package com.example.borys.wombatcalendar;
+package com.stach.borys.wombatcalendar;
 
 import android.content.Intent;
 import android.os.Bundle;

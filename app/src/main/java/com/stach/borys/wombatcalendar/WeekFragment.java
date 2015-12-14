@@ -1,4 +1,4 @@
-package com.example.borys.wombatcalendar;
+package com.stach.borys.wombatcalendar;
 
 import android.content.Intent;
 import android.content.res.Resources;
@@ -15,10 +15,10 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.borys.wombatcalendar.data.CalendarDataSource;
-import com.example.borys.wombatcalendar.data.DayData;
-import com.example.borys.wombatcalendar.data.EventData;
-import com.example.borys.wombatcalendar.data.WeekData;
+import com.stach.borys.wombatcalendar.data.CalendarDataSource;
+import com.stach.borys.wombatcalendar.data.DayData;
+import com.stach.borys.wombatcalendar.data.EventData;
+import com.stach.borys.wombatcalendar.data.WeekData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
