@@ -74,7 +74,7 @@ public class WeekActivity extends AppCompatActivity {
                 getString(R.string.p_december)));
 
         //make cash for images
-        final int cacheSize = 2 * 1024 * 1024;
+        final int cacheSize = 55 * 1024 * 1024;
         mMemoryCache = new LruCache<String, Bitmap>(cacheSize);
 
         if(savedInstanceState != null) {
@@ -163,25 +163,16 @@ public class WeekActivity extends AppCompatActivity {
             //in new thread, cash images for next months
             new Thread(new Runnable() {
                 public void run() {
-                    Integer removePreviousMonth = (MONTH -2)%12;
-                    if (removePreviousMonth < 0){
-                        removePreviousMonth = -removePreviousMonth;
-                    }
+                    Integer removePreviousMonth = (MONTH +10)%12;
                     String removePreviousMonthStr = mMonthPictureStrings.get(removePreviousMonth);
                     removeBitmapFromMemoryCache(removePreviousMonthStr);
                     String removeNextMonthStr = mMonthPictureStrings.get((MONTH + 2) % 12);
                     removeBitmapFromMemoryCache(removeNextMonthStr);
-
-                    Integer addPreviousMonth = (MONTH -1)%12;
-                    if (addPreviousMonth < 0){
-                        addPreviousMonth = -addPreviousMonth;
-                    }
-
+                    Integer addPreviousMonth = (MONTH +11)%12;
                     String previousMonthStr = mMonthPictureStrings.get(addPreviousMonth);
                     Bitmap previousMonthPic = BitmapFactory.decodeResource(getResources(),
                             getResources().getIdentifier(previousMonthStr, "drawable", getPackageName()));
                     addBitmapToMemoryCache(previousMonthStr, previousMonthPic);
-
                     String nextMonthStr = mMonthPictureStrings.get((MONTH + 1) % 12);
                     Bitmap nextMonthPic = BitmapFactory.decodeResource(getResources(),
                             getResources().getIdentifier(nextMonthStr, "drawable", getPackageName()));

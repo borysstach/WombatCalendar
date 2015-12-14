@@ -71,29 +71,37 @@ public class WeekFragment extends Fragment {
                 getString(R.string.p_december)));
 
         mNumberOfFragment = getArguments().getInt("num");
-        mCalendar = Calendar.getInstance();
-        mCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        mCalendar.add(Calendar.WEEK_OF_YEAR, (mNumberOfFragment));
+        setDate();
         mCurrentMonth = mCalendar.get(Calendar.MONTH);
-        //new thread to get data from content provider
-        Calendar endOfWeek = Calendar.getInstance();
-        endOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-        endOfWeek.add(Calendar.WEEK_OF_YEAR, (mNumberOfFragment));
-        CalendarDataSource readerEvents = new CalendarDataSource(getContext());
-        long begin = CalendarDataSource.getBeginInMillis(mCalendar);
-        long end = CalendarDataSource.getEndInMillis(endOfWeek);
-        mWeek = new WeekData(readerEvents.getEvents(begin, end));
-        endOfWeek = null;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View rootView = inflater.inflate(R.layout.week_view_fragment, container, false);
-        RecyclerView mWeekRecyclerView = (RecyclerView) rootView.findViewById(R.id.week_recycler_view);
+        //mWeek = new WeekData(new ArrayList<EventData>());
+        final RecyclerView mWeekRecyclerView = (RecyclerView) rootView.findViewById(R.id.week_recycler_view);
         mWeekRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         mWeekRecyclerView.setAdapter(new DayOfWeekRecyclerAdapter());
+        new Thread(new Runnable() {
+            public void run() {
+                Calendar endOfWeek = Calendar.getInstance();
+                endOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+                endOfWeek.add(Calendar.WEEK_OF_YEAR, (mNumberOfFragment));
+                long begin = CalendarDataSource.getBeginInMillis(mCalendar);
+                long end = CalendarDataSource.getEndInMillis(endOfWeek);
+                CalendarDataSource readerEvents = new CalendarDataSource(getContext());
+                mWeek = new WeekData(readerEvents.getEvents(begin, end));
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mWeekRecyclerView.setAdapter(new DayOfWeekRecyclerAdapter());
+                        }
+                    });
+                }
+            }
+        }).start();
         return rootView;
     }
 
@@ -151,24 +159,25 @@ public class WeekFragment extends Fragment {
                     startActivity(intent);
                 }
             });
-
-            DayData mDay = mWeek.get(cloneCalendar.get(Calendar.DAY_OF_WEEK));
-            if (mDay != null) {
-                List<EventData> mEvents = mDay.getEvents();
-                if (mEvents.size() < 3) {
-                    for (int i = 0; i < mEvents.size(); i++) {
-                        mEventViews.get(i).setText(mEvents.get(i).getTitle());
-                    }
-                } else {
-                    for (int i = 0; i < 3; i++) {
-                        mEventViews.get(i).setText(mEvents.get(i).getTitle());
-                    }
-                    if ((mEvents.size() - 3) > 0) {
-                        mEventNum.setText("+" + (mEvents.size() - 3));
+            if (mWeek !=null) {
+                DayData mDay = mWeek.get(cloneCalendar.get(Calendar.DAY_OF_WEEK));
+                if (mDay != null) {
+                    List<EventData> mEvents = mDay.getEvents();
+                    if (mEvents.size() < 3) {
+                        for (int i = 0; i < mEvents.size(); i++) {
+                            mEventViews.get(i).setText(mEvents.get(i).getTitle());
+                        }
+                    } else {
+                        for (int i = 0; i < 3; i++) {
+                            mEventViews.get(i).setText(mEvents.get(i).getTitle());
+                        }
+                        if ((mEvents.size() - 3) > 0) {
+                            mEventNum.setText("+" + (mEvents.size() - 3));
+                        }
                     }
                 }
+                mDay = null;
             }
-            mDay = null;
             strokeDrawable = null;
             monthColorString = null;
             thisMonthColor = null;
@@ -180,6 +189,10 @@ public class WeekFragment extends Fragment {
     ////////////////////////////             ADAPTER
 
     public class DayOfWeekRecyclerAdapter extends RecyclerView.Adapter<DayOfWeekViewHolder> {
+
+        public DayOfWeekRecyclerAdapter (){
+            setDate();
+        }
 
         @Override
         public DayOfWeekViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -202,6 +215,12 @@ public class WeekFragment extends Fragment {
         public int getItemCount() {
             return mDaysStrings.size();
         }
+    }
+
+    private void setDate(){
+        mCalendar = Calendar.getInstance();
+        mCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        mCalendar.add(Calendar.WEEK_OF_YEAR, (mNumberOfFragment));
     }
 
     @Override

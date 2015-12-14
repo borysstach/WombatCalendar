@@ -1,8 +1,6 @@
 package com.example.borys.wombatcalendar.data;
 
 
-import android.util.Log;
-
 import java.util.Calendar;
 import java.util.List;
 
@@ -16,7 +14,6 @@ public class WeekData {
     private DayData mSunday;
 
     public WeekData (List<EventData> events){
-        Log.d("Constuctior","WeekData");
         Calendar tmpCalendar = Calendar.getInstance();
         for(EventData event : events){
             tmpCalendar.setTimeInMillis(event.getBegin());
