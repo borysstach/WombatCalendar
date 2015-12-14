@@ -65,37 +65,10 @@ public class WeekData {
             case Calendar.SATURDAY:
                 return mSaturday;
             case Calendar.SUNDAY:
-                return mWednesday;
+                return mSunday;
             default:
                 return null;
         }
     }
 
-    public DayData getMonday() {
-        return mMonday;
-    }
-
-    public DayData getTuesday() {
-        return mTuesday;
-    }
-
-    public DayData getWednesday() {
-        return mWednesday;
-    }
-
-    public DayData getThursday() {
-        return mThursday;
-    }
-
-    public DayData getFriday() {
-        return mFriday;
-    }
-
-    public DayData getSaturday() {
-        return mSaturday;
-    }
-
-    public DayData getSunday() {
-        return mSunday;
-    }
 }

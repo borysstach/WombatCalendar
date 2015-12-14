@@ -1,9 +1,12 @@
 package com.stach.borys.wombatcalendar;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -11,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.util.LruCache;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,6 +35,7 @@ public class WeekActivity extends AppCompatActivity {
     private List<String> mMonthPictureStrings;
     private LruCache<String, Bitmap> mMemoryCache;
     private Integer mPosition;
+    private FloatingActionButton mFloatingActionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +49,7 @@ public class WeekActivity extends AppCompatActivity {
         mToolBarImage = (ImageView) findViewById(R.id.tool_image);
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         mToolbarSubtitle = (TextView) findViewById(R.id.week_subtitle);
+        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.floating_action_button);
 
         mMonthStrings = new ArrayList<>(Arrays.asList(
                 getString(R.string.january),
@@ -133,6 +139,18 @@ public class WeekActivity extends AppCompatActivity {
         String title = mMonthStrings.get(currentMonth);
         String picture = mMonthPictureStrings.get(currentMonth);
         String subtitle = "" + (getCalendarFromPosition(position).get(Calendar.YEAR));
+
+        final Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.WEEK_OF_YEAR, position - MAX_PAGE / 2);
+        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_INSERT)
+                        .setData(CalendarContract.Events.CONTENT_URI)
+                        .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, calendar.getTimeInMillis());
+                startActivity(intent);
+            }
+        });
         //check if change layout is needed
         if (mCollapsingToolbarLayout.getTitle() != title) {
 
@@ -144,6 +162,7 @@ public class WeekActivity extends AppCompatActivity {
             mCollapsingToolbarLayout.setCollapsedTitleTextColor(color);
             mCollapsingToolbarLayout.setExpandedTitleColor(color);
             mToolbarSubtitle.setTextColor(color);
+            mFloatingActionButton.setBackgroundColor(color);
 
             Bitmap bitmap = getBitmapFromMemCache(picture);
             if (bitmap != null) {
