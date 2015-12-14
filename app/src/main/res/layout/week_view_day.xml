@@ -6,12 +6,14 @@
     <LinearLayout
         android:id="@+id/day_linear_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/week_day_height"
+        android:layout_height="match_parent"
+        android:minHeight="@dimen/week_day_height"
         android:layout_marginLeft="@dimen/activitu_half_margin"
         android:layout_marginRight="@dimen/activitu_half_margin"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:background="@drawable/stroke_shape"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="@dimen/activity_horizontal_margin">
 
         <TextView
             android:id="@+id/day_name_text_view"
@@ -21,52 +23,35 @@
             android:clickable="false"
             android:duplicateParentState="true"
             android:gravity="center_horizontal"
-            android:paddingTop="4dp"
             />
 
         <TextView
             android:id="@+id/week_view_event_0"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clickable="false"
-            android:duplicateParentState="true"
-            android:gravity="center_horizontal"
-            android:paddingTop="4dp"
-            android:textColor="@color/just_text"/>
-            />
+            style="@style/week_event"/>
+
 
         <TextView
             android:id="@+id/week_view_event_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clickable="false"
-            android:duplicateParentState="true"
-            android:gravity="center_horizontal"
-            android:paddingTop="4dp"
-            android:textColor="@color/just_text"/>
-            />
+            style="@style/week_event"/>
+
 
         <TextView
             android:id="@+id/week_view_event_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clickable="false"
-            android:duplicateParentState="true"
-            android:gravity="center_horizontal"
-            android:paddingTop="4dp"
-            android:textColor="@color/just_text"/>
-            />
+            style="@style/week_event"/>
+
 
         <TextView
             android:id="@+id/week_view_event_num"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clickable="false"
-            android:duplicateParentState="true"
-            android:gravity="center_horizontal"
-            android:paddingTop="4dp"
-            android:textColor="@color/just_text"/>
-            />
+            style="@style/week_event"/>
+
 
     </LinearLayout>
 

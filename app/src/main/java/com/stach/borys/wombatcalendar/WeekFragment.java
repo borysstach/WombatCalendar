@@ -1,6 +1,7 @@
 package com.stach.borys.wombatcalendar;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -81,7 +82,11 @@ public class WeekFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.week_view_fragment, container, false);
         //mWeek = new WeekData(new ArrayList<EventData>());
         final RecyclerView mWeekRecyclerView = (RecyclerView) rootView.findViewById(R.id.week_recycler_view);
-        mWeekRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        Integer gridSize = 2;
+        if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            gridSize = 3;
+        }
+        mWeekRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), gridSize));
         mWeekRecyclerView.setAdapter(new DayOfWeekRecyclerAdapter());
         new Thread(new Runnable() {
             public void run() {
@@ -123,7 +128,7 @@ public class WeekFragment extends Fragment {
             mEventViews.add((TextView) itemView.findViewById(R.id.week_view_event_0));
             mEventViews.add((TextView) itemView.findViewById(R.id.week_view_event_1));
             mEventViews.add((TextView) itemView.findViewById(R.id.week_view_event_2));
-            mEventNum = (TextView) itemView.findViewById(R.id.week_view_event_num);
+            mEventViews.add((TextView) itemView.findViewById(R.id.week_view_event_num));
             mNewActivityButton = (TextView) itemView.findViewById(R.id.day_button);
             mLinearLayout = (LinearLayout) itemView.findViewById(R.id.day_linear_layout);
         }
@@ -135,9 +140,13 @@ public class WeekFragment extends Fragment {
 
             //change color depend of month
             String monthString = mMonthColorStrings.get(mCurrentMonth) + "_day_title";
+            String eventString = mMonthColorStrings.get(mCurrentMonth) + "_just_text";
             Integer thisMonthColor = ContextCompat.getColor(getActivity(), getActivity().getResources().getIdentifier(monthString, "color", getActivity().getPackageName()));
+            Integer eventColor = ContextCompat.getColor(getActivity(), getActivity().getResources().getIdentifier(eventString, "color", getActivity().getPackageName()));
             mDayName.setTextColor(thisMonthColor);
-
+            for (TextView event : mEventViews) {
+                event.setTextColor(eventColor);
+            }
             //get stroke width
             Resources resources = getResources();
             float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, resources.getDisplayMetrics());
@@ -159,21 +168,22 @@ public class WeekFragment extends Fragment {
                     startActivity(intent);
                 }
             });
-            if (mWeek !=null) {
+            if (mWeek != null) {
                 DayData mDay = mWeek.get(cloneCalendar.get(Calendar.DAY_OF_WEEK));
                 if (mDay != null) {
                     List<EventData> mEvents = mDay.getEvents();
-                    if (mEvents.size() < 3) {
+                    if (mEvents.size() <= 4) {
                         for (int i = 0; i < mEvents.size(); i++) {
-                            mEventViews.get(i).setText(mEvents.get(i).getTitle());
+                            mEventViews.get(i).setVisibility(View.VISIBLE);
+                            mEventViews.get(i).setText(" * " + mEvents.get(i).getTitle());
                         }
                     } else {
                         for (int i = 0; i < 3; i++) {
-                            mEventViews.get(i).setText(mEvents.get(i).getTitle());
+                            mEventViews.get(i).setVisibility(View.VISIBLE);
+                            mEventViews.get(i).setText(" * " + mEvents.get(i).getTitle());
                         }
-                        if ((mEvents.size() - 3) > 0) {
-                            mEventNum.setText("+" + (mEvents.size() - 3));
-                        }
+                        mEventViews.get(3).setVisibility(View.VISIBLE);
+                        mEventViews.get(3).setText(" +" + (mEvents.size() - 3));
                     }
                 }
                 mDay = null;
@@ -190,7 +200,7 @@ public class WeekFragment extends Fragment {
 
     public class DayOfWeekRecyclerAdapter extends RecyclerView.Adapter<DayOfWeekViewHolder> {
 
-        public DayOfWeekRecyclerAdapter (){
+        public DayOfWeekRecyclerAdapter() {
             setDate();
         }
 
@@ -217,7 +227,7 @@ public class WeekFragment extends Fragment {
         }
     }
 
-    private void setDate(){
+    private void setDate() {
         mCalendar = Calendar.getInstance();
         mCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
         mCalendar.add(Calendar.WEEK_OF_YEAR, (mNumberOfFragment));
