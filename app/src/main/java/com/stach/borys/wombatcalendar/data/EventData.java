@@ -9,7 +9,17 @@ public class EventData {
     private long mBegin;
     private long mEnd;
     private boolean mAllDay;
+    private boolean mStandard;
 
+    public EventData(){
+        mStandard = false;
+    }
+
+    public EventData(String title){
+            mTitle = title;
+        mAllDay = false;
+        mStandard = true;
+    }
 
     public long getId() {
         return mId;
@@ -49,6 +59,14 @@ public class EventData {
 
     public void setTitle(String title) {
         mTitle = title;
+    }
+
+    public boolean isStandard() {
+        return mStandard;
+    }
+
+    public void setStandard(boolean standard) {
+        mStandard = standard;
     }
 
     public String getStartingHour(){

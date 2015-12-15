@@ -8,8 +8,9 @@ public class DayData {
 
     private List<EventData> mEvents;
 
-    public DayData(){
+    public DayData() {
         mEvents = new ArrayList<>();
+        mEvents.add(StandardEvents.freeDay);
     }
 
     public List<EventData> getEvents() {
@@ -17,6 +18,36 @@ public class DayData {
     }
 
     public void add(EventData event) {
-        mEvents.add(event);
+        if (event.isAllDay()) {
+            if (mEvents.get(0) == StandardEvents.freeDay) {
+                mEvents.remove(0);
+            }
+            mEvents.add(0, event);
+        } else {
+            for (int i = 0; i < mEvents.size(); i++) {
+                if (i == (mEvents.size() - 1)) {
+                    if (mEvents.get(i).isAllDay() || mEvents.get(i) == StandardEvents.freeDay) {
+                        if (mEvents.get(i) == StandardEvents.freeDay) {
+                            mEvents.remove(0);
+                        }
+                        EventData morningEvent = StandardEvents.morning;
+                        morningEvent.setTitle(morningEvent.getTitle() + event.getStartingHour() + ":" + event.getStartingMinutes() + "!");
+                        mEvents.add(morningEvent);
+                        mEvents.add(event);
+                        mEvents.add(StandardEvents.evening);
+                        break;
+                    } else if (mEvents.get(i).isStandard()) {
+                        mEvents.add(i, event);
+                        break;
+                    }
+                } else if (mEvents.get(i).isAllDay()) {
+                    continue;
+                }else if (mEvents.get(i).getBegin() > event.getBegin()){
+                    mEvents.add(i, event);
+            }
+        }
+
     }
+}
+
 }

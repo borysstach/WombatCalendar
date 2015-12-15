@@ -116,7 +116,6 @@ public class WeekFragment extends Fragment {
 
         private TextView mDayName;
         private List<TextView> mEventViews = new ArrayList<>();
-        private TextView mEventNum;
         private LinearLayout mLinearLayout;
         private Calendar cloneCalendar;
         private TextView mNewActivityButton;
