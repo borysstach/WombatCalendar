@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.stach.borys.wombatcalendar.data.CalendarDataSource;
+import com.stach.borys.wombatcalendar.data.DayData;
 import com.stach.borys.wombatcalendar.data.EventData;
 
 import java.util.Calendar;
@@ -41,7 +42,8 @@ public class DayFragment extends Fragment {
         CalendarDataSource readerEvents = new CalendarDataSource(getContext());
         long begin = CalendarDataSource.getBeginInMillis(mCalendar);
         long end = CalendarDataSource.getEndInMillis(mCalendar);
-        mEvents = readerEvents.getEvents(begin, end);
+        mEvents = (new DayData(readerEvents.getEvents(begin, end))).getEvents();
+
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,7 +65,7 @@ public class DayFragment extends Fragment {
 
     public class SingleDayRecyclerAdapter extends RecyclerView.Adapter<CustomViewHolder> {
 
-        class DayViewHolder extends CustomViewHolder{
+        class DayEventViewHolder extends CustomViewHolder{
 
             private TextView mEventTitle;
             private TextView mEventStartHour;
@@ -71,7 +73,7 @@ public class DayFragment extends Fragment {
             private TextView mEventEndHour;
             private TextView mEventEndMinute;
 
-            public DayViewHolder(View itemView) {
+            public DayEventViewHolder(View itemView) {
                 super(itemView);
                 mEventTitle = (TextView) itemView.findViewById(R.id.specific_time_event_name);
                 mEventStartHour = (TextView) itemView.findViewById(R.id.starting_hour);
@@ -81,18 +83,18 @@ public class DayFragment extends Fragment {
             }
         public void bindEvent(EventData event) {
             mEventTitle.setText(event.getTitle());
-            mEventStartHour.setText(event.getStartingHour());
-            mEventStartMinute.setText(event.getStartingMinutes());
-            mEventEndHour.setText(event.getEndingHour());
-            mEventEndMinute.setText(event.getEndingMinutes());
+            mEventStartHour.setText(""+event.getStartingHour());
+            mEventStartMinute.setText(""+event.getStartingMinutes());
+            mEventEndHour.setText(""+event.getEndingHour());
+            mEventEndMinute.setText(""+event.getEndingMinutes());
         }
     }
 
-        class AllDayViewHolder extends CustomViewHolder {
+        class AllDayEventViewHolder extends CustomViewHolder {
 
             private TextView mEventTitle;
 
-            public AllDayViewHolder(View itemView) {
+            public AllDayEventViewHolder(View itemView) {
                 super(itemView);
                 mEventTitle = (TextView) itemView.findViewById(R.id.all_day_time_event_name);
             }
@@ -101,6 +103,19 @@ public class DayFragment extends Fragment {
             }
 
         }
+        class StandardEventViewHolder extends CustomViewHolder{
+
+            private TextView mEventTitle;
+
+            public StandardEventViewHolder(View itemView) {
+                super(itemView);
+                mEventTitle = (TextView) itemView.findViewById(R.id.standard_event_name);
+            }
+
+            public void bindEvent(EventData event) {
+                mEventTitle.setText(event.getTitle());
+            }
+        }
 
         @Override
         public CustomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -108,10 +123,13 @@ public class DayFragment extends Fragment {
             switch(viewType){
                 case 1:
                     View view_all = layoutInflater.inflate(R.layout.day_allday_event_layout, parent, false);
-                    return new AllDayViewHolder(view_all);
+                    return new AllDayEventViewHolder(view_all);
+                case 2:
+                    View view_stan = layoutInflater.inflate(R.layout.day_standard_event_layout, parent, false);
+                    return new StandardEventViewHolder(view_stan);
                 default:
                     View view = layoutInflater.inflate(R.layout.day_event_layout, parent, false);
-                    return new DayViewHolder(view);
+                    return new DayEventViewHolder(view);
             }
         }
 
@@ -128,7 +146,11 @@ public class DayFragment extends Fragment {
         public int getItemViewType(int position) {
             if(mEvents.get(position).isAllDay()){
                 return 1;
-            }else return 0;
+            }else if (mEvents.get(position).isStandard()){
+                return 2;
+            }else {
+                return 0;
+            }
         }
 
         @Override

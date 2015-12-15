@@ -15,11 +15,14 @@ public class EventData {
         mStandard = false;
     }
 
-    public EventData(String title){
-            mTitle = title;
-        mAllDay = false;
-        mStandard = true;
+    public static EventData standardEventData(String title){
+         EventData event = new EventData();
+         event.setTitle(title);
+        event.setAllDay(0);
+        event.setStandard(true);
+        return event;
     }
+
 
     public long getId() {
         return mId;
@@ -65,30 +68,30 @@ public class EventData {
         return mStandard;
     }
 
-    public void setStandard(boolean standard) {
+    private void setStandard(boolean standard) {
         mStandard = standard;
     }
 
-    public String getStartingHour(){
+    public Integer getStartingHour(){
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(mBegin);
-        return "" + calendar.get(Calendar.HOUR_OF_DAY);
+        return calendar.get(Calendar.HOUR_OF_DAY);
     }
-    public String getStartingMinutes(){
+    public Integer getStartingMinutes(){
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(mBegin);
-        return "" + calendar.get(Calendar.MINUTE);
+        return calendar.get(Calendar.MINUTE);
     }
 
-    public String getEndingHour(){
+    public Integer getEndingHour(){
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(mEnd);
-        return "" + calendar.get(Calendar.HOUR_OF_DAY);
+        return calendar.get(Calendar.HOUR_OF_DAY);
     }
 
-    public String getEndingMinutes(){
+    public Integer getEndingMinutes(){
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(mEnd);
-        return "" + calendar.get(Calendar.MINUTE);
+        return calendar.get(Calendar.MINUTE);
     }
 }
