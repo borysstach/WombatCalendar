@@ -42,7 +42,8 @@ public class DayFragment extends Fragment {
         CalendarDataSource readerEvents = new CalendarDataSource(getContext());
         long begin = CalendarDataSource.getBeginInMillis(mCalendar);
         long end = CalendarDataSource.getEndInMillis(mCalendar);
-        mEvents = (new DayData(readerEvents.getEvents(begin, end))).getEvents();
+        DayData day = new DayData(readerEvents.getEvents(begin, end));
+        mEvents = day.getSortedEvents();
 
     }
 
@@ -84,9 +85,13 @@ public class DayFragment extends Fragment {
         public void bindEvent(EventData event) {
             mEventTitle.setText(event.getTitle());
             mEventStartHour.setText(""+event.getStartingHour());
-            mEventStartMinute.setText(""+event.getStartingMinutes());
+            if(event.getStartingMinutes() < 10){
+                mEventStartMinute.setText("0"+event.getStartingMinutes());
+            }else mEventStartMinute.setText(""+event.getStartingMinutes());
             mEventEndHour.setText(""+event.getEndingHour());
-            mEventEndMinute.setText(""+event.getEndingMinutes());
+            if(event.getEndingMinutes() < 10){
+                mEventEndMinute.setText("0"+event.getEndingMinutes());
+            } else mEventEndMinute.setText(""+event.getEndingMinutes());
         }
     }
 

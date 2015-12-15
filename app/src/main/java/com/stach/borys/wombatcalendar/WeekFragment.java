@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.stach.borys.wombatcalendar.data.CalendarDataSource;
-import com.stach.borys.wombatcalendar.data.DayData;
 import com.stach.borys.wombatcalendar.data.EventData;
 import com.stach.borys.wombatcalendar.data.WeekData;
 
@@ -168,24 +167,23 @@ public class WeekFragment extends Fragment {
                 }
             });
             if (mWeek != null) {
-                DayData mDay = mWeek.get(cloneCalendar.get(Calendar.DAY_OF_WEEK));
-                if (mDay != null) {
-                    List<EventData> mEvents = mDay.getEvents();
-                    if (mEvents.size() <= 4) {
-                        for (int i = 0; i < mEvents.size(); i++) {
+                List<EventData> events = mWeek.get(cloneCalendar.get(Calendar.DAY_OF_WEEK));
+                if (events != null) {
+                    if (events.size() <= 4) {
+                        for (int i = 0; i < events.size(); i++) {
                             mEventViews.get(i).setVisibility(View.VISIBLE);
-                            mEventViews.get(i).setText(" * " + mEvents.get(i).getTitle());
+                            mEventViews.get(i).setText(" * " + events.get(i).getTitle());
                         }
                     } else {
                         for (int i = 0; i < 3; i++) {
                             mEventViews.get(i).setVisibility(View.VISIBLE);
-                            mEventViews.get(i).setText(" * " + mEvents.get(i).getTitle());
+                            mEventViews.get(i).setText(" * " + events.get(i).getTitle());
                         }
                         mEventViews.get(3).setVisibility(View.VISIBLE);
-                        mEventViews.get(3).setText(" +" + (mEvents.size() - 3));
+                        mEventViews.get(3).setText(" +" + (events.size() - 3));
                     }
                 }
-                mDay = null;
+                events = null;
             }
             strokeDrawable = null;
             monthColorString = null;
