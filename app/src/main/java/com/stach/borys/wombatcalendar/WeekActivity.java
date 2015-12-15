@@ -137,7 +137,7 @@ public class WeekActivity extends AppCompatActivity {
         mPosition = position;
         Integer currentMonth = getCalendarFromPosition(position).get(Calendar.MONTH);
         String title = mMonthStrings.get(currentMonth);
-        String picture = mMonthPictureStrings.get(currentMonth);
+        final String picture = mMonthPictureStrings.get(currentMonth);
         String subtitle = "" + (getCalendarFromPosition(position).get(Calendar.YEAR));
 
         final Calendar calendar = Calendar.getInstance();
@@ -148,6 +148,15 @@ public class WeekActivity extends AppCompatActivity {
                 Intent intent = new Intent(Intent.ACTION_INSERT)
                         .setData(CalendarContract.Events.CONTENT_URI)
                         .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, calendar.getTimeInMillis());
+                startActivity(intent);
+            }
+        });
+
+        mCollapsingToolbarLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ImageActivity.class);
+                intent.putExtra("month",picture);
                 startActivity(intent);
             }
         });
@@ -174,7 +183,6 @@ public class WeekActivity extends AppCompatActivity {
             color = null;
             bitmap = null;
             monthString = null;
-            picture = null;
             title = null;
             subtitle = null;
             currentMonth = null;
