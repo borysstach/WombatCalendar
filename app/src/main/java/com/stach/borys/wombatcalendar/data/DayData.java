@@ -28,6 +28,13 @@ public class DayData {
         return mSortedEvents;
     }
 
+    private String addZero (Integer min){
+        if(min < 10){
+            return "0"+ min;
+        }
+        return ""+min;
+    }
+
     public void add(EventData event) {
         if (event.isAllDay()) {
             if (mSortedEvents.get(0).getTitle().equals(freeDay)) {
@@ -45,7 +52,9 @@ public class DayData {
                         String title;
                         if (event.getStartingHour() > 12){
                             title = morning + "późna :D";
-                        }else title = morning + event.getStartingHour() + ":" + event.getStartingMinutes() + "!";
+                        }else {
+                            title = morning + event.getStartingHour() + ":" + addZero(event.getStartingMinutes()) + "!";
+                        }
                         morningEvent.setTitle(title);
                         mSortedEvents.add(morningEvent);
                         mSortedEvents.add(event);

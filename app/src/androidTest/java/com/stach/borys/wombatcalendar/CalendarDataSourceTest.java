@@ -1,14 +1,10 @@
 package com.stach.borys.wombatcalendar;
 
-import android.test.AndroidTestCase;
-
-import com.stach.borys.wombatcalendar.data.CalendarDataSource;
-
-public class CalendarDataSourceTest extends AndroidTestCase{
-    public void readCalendar(){
-        CalendarDataSource reader = new CalendarDataSource(getContext());
-        assertNotNull(reader.getAllCalendars());
-    }
+//public class CalendarDataSourceTest extends AndroidTestCase{
+//    public void readCalendar(){
+//        CalendarDataSource reader = new CalendarDataSource(getContext());
+//        assertNotNull(reader.getAllCalendars());
+//    }
 
 //    public void readEvents(){
 //        CalendarDataSource readerEvents = new CalendarDataSource(getContext());
@@ -18,4 +14,4 @@ public class CalendarDataSourceTest extends AndroidTestCase{
 //        testCalendarStart.set(testCalendarStart.get(Calendar.YEAR), testCalendarStart.get(Calendar.MONTH), testCalendarStart.get(Calendar.DAY_OF_MONTH), 24, 0);
 //        assertNotNull(readerEvents.getEventsFromDay(testCalendarStart, testCalendarStop));
 //    }
-}
+//}

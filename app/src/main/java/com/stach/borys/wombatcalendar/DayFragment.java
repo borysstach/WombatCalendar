@@ -61,12 +61,11 @@ public class DayFragment extends Fragment {
     ////////////////////////////             VIEW HOLDER
 
 
-
     ////////////////////////////             ADAPTER
 
     public class SingleDayRecyclerAdapter extends RecyclerView.Adapter<CustomViewHolder> {
 
-        class DayEventViewHolder extends CustomViewHolder{
+        class DayEventViewHolder extends CustomViewHolder {
 
             private TextView mEventTitle;
             private TextView mEventStartHour;
@@ -82,18 +81,22 @@ public class DayFragment extends Fragment {
                 mEventEndHour = (TextView) itemView.findViewById(R.id.ending_hour);
                 mEventEndMinute = (TextView) itemView.findViewById(R.id.ending_minute);
             }
-        public void bindEvent(EventData event) {
-            mEventTitle.setText(event.getTitle());
-            mEventStartHour.setText(""+event.getStartingHour());
-            if(event.getStartingMinutes() < 10){
-                mEventStartMinute.setText("0"+event.getStartingMinutes());
-            }else mEventStartMinute.setText(""+event.getStartingMinutes());
-            mEventEndHour.setText(""+event.getEndingHour());
-            if(event.getEndingMinutes() < 10){
-                mEventEndMinute.setText("0"+event.getEndingMinutes());
-            } else mEventEndMinute.setText(""+event.getEndingMinutes());
+
+            public void bindEvent(EventData event) {
+                mEventTitle.setText(event.getTitle());
+                mEventStartHour.setText("" + event.getStartingHour());
+                mEventStartMinute.setText(addZero(event.getStartingMinutes()));
+                mEventEndHour.setText("" + event.getEndingHour());
+                mEventEndMinute.setText(addZero(event.getEndingMinutes()));
+            }
         }
-    }
+
+        private String addZero(Integer min) {
+            if (min < 10) {
+                return "0" + min;
+            }
+            return "" + min;
+        }
 
         class AllDayEventViewHolder extends CustomViewHolder {
 
@@ -103,12 +106,14 @@ public class DayFragment extends Fragment {
                 super(itemView);
                 mEventTitle = (TextView) itemView.findViewById(R.id.all_day_time_event_name);
             }
+
             public void bindEvent(EventData event) {
                 mEventTitle.setText(event.getTitle());
             }
 
         }
-        class StandardEventViewHolder extends CustomViewHolder{
+
+        class StandardEventViewHolder extends CustomViewHolder {
 
             private TextView mEventTitle;
 
@@ -125,7 +130,7 @@ public class DayFragment extends Fragment {
         @Override
         public CustomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            switch(viewType){
+            switch (viewType) {
                 case 1:
                     View view_all = layoutInflater.inflate(R.layout.day_allday_event_layout, parent, false);
                     return new AllDayEventViewHolder(view_all);
@@ -149,11 +154,11 @@ public class DayFragment extends Fragment {
 
         @Override
         public int getItemViewType(int position) {
-            if(mEvents.get(position).isAllDay()){
+            if (mEvents.get(position).isAllDay()) {
                 return 1;
-            }else if (mEvents.get(position).isStandard()){
+            } else if (mEvents.get(position).isStandard()) {
                 return 2;
-            }else {
+            } else {
                 return 0;
             }
         }
@@ -164,15 +169,15 @@ public class DayFragment extends Fragment {
         }
     }
 
-    private class CustomViewHolder extends RecyclerView.ViewHolder{
-        public CustomViewHolder(View itemView){
+    private class CustomViewHolder extends RecyclerView.ViewHolder {
+        public CustomViewHolder(View itemView) {
             super(itemView);
         }
-        public void bindEvent(EventData event){
+
+        public void bindEvent(EventData event) {
 
         }
     }
-
 
 
 }

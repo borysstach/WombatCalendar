@@ -6,7 +6,7 @@
     <dimen name="week_appbar_height">200dp</dimen>
     <dimen name="day_appbar_height">180dp</dimen>
     <dimen name="appbar_margin">16dp</dimen>
-    <dimen name="week_day_height">130dp</dimen>
+    <dimen name="week_day_height">160dp</dimen>
     <dimen name="week_corner_radius">4dp</dimen>
     <dimen name="day_corner_radius">8dp</dimen>
     <dimen name="image_padding">16dp</dimen>

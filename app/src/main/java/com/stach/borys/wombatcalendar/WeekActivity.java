@@ -1,6 +1,7 @@
 package com.stach.borys.wombatcalendar;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import java.util.List;
 public class WeekActivity extends AppCompatActivity {
 
     public static final int MAX_PAGE = 200;
+    public static final String DAY_INTENT_PICTURE = "picture";
 
     private ViewPager mViewPager;
     private ImageView mToolBarImage;
@@ -156,7 +158,7 @@ public class WeekActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ImageActivity.class);
-                intent.putExtra("month",picture);
+                intent.putExtra(DAY_INTENT_PICTURE, picture);
                 startActivity(intent);
             }
         });
@@ -171,7 +173,7 @@ public class WeekActivity extends AppCompatActivity {
             mCollapsingToolbarLayout.setCollapsedTitleTextColor(color);
             mCollapsingToolbarLayout.setExpandedTitleColor(color);
             mToolbarSubtitle.setTextColor(color);
-            mFloatingActionButton.setBackgroundColor(color);
+            mFloatingActionButton.setBackgroundTintList(ColorStateList.valueOf(color));
 
             Bitmap bitmap = getBitmapFromMemCache(picture);
             if (bitmap != null) {

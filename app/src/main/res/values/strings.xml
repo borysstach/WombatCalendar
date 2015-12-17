@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="http://schemas.android.com/tools">
     <string name="app_name">Wombat Calendar</string>
 
     <string name="monday">poniedziałek</string>
@@ -40,7 +40,6 @@
 
     <string name="whole_day_event">Dzisiaj:</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="format_event">\u2022 %1$s</string>
 
 </resources>

@@ -2,12 +2,15 @@ package com.stach.borys.wombatcalendar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
@@ -25,6 +28,7 @@ public class DayActivity extends AppCompatActivity {
     private int mDay;
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
     private List<String> mDaysStrings;
+    private FloatingActionButton mFloatingActionButton;
 
 
     @Override
@@ -55,6 +59,7 @@ public class DayActivity extends AppCompatActivity {
         mViewPager.setCurrentItem(MAX_PAGE / 2);
 
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.day_floating_action_button);
     }
 
     public class DayPageAdapter extends FragmentStatePagerAdapter {
@@ -71,9 +76,18 @@ public class DayActivity extends AppCompatActivity {
         @Override
         public void setPrimaryItem(ViewGroup container, int position, Object object) {
             super.setPrimaryItem(container, position, object);
-            Calendar calendar = (Calendar) mCalendar.clone();
+            final Calendar calendar = (Calendar) mCalendar.clone();
             calendar.add(Calendar.DAY_OF_MONTH, position - MAX_PAGE / 2);
             mCollapsingToolbarLayout.setTitle((mDaysStrings.get(calendar.get(Calendar.DAY_OF_WEEK) - 1) + " " + calendar.get(Calendar.DAY_OF_MONTH)));
+            mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Intent.ACTION_INSERT)
+                            .setData(CalendarContract.Events.CONTENT_URI)
+                            .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, calendar.getTimeInMillis());
+                    startActivity(intent);
+                }
+            });
         }
 
         @Override

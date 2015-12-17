@@ -20,7 +20,7 @@ public class ImageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_image);
 
         Intent intent = getIntent();
-        String image = intent.getStringExtra("month");
+        String image = intent.getStringExtra(WeekActivity.DAY_INTENT_PICTURE) + "_full";
 
         mImageView = (ImageView) findViewById(R.id.iv_photo);
         Drawable bitmap = ContextCompat.getDrawable(this, getResources().getIdentifier(image, "drawable", getPackageName()));

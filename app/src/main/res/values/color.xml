@@ -16,33 +16,33 @@
     <color name="styczen_stroke">#7B2854</color>
     <color name="styczen_just_text">#B87196</color>
 
-    <color name="luty_day_title">#FA477D</color>
-    <color name="luty_stroke">#F52262</color>
-    <color name="luty_just_text">#FE9BB9</color>
+    <color name="luty_day_title">#FF4081</color>
+    <color name="luty_stroke">#F50057</color>
+    <color name="luty_just_text">#FF80AB</color>
 
-    <color name="marzec_day_title">#7CCDD8</color>
-    <color name="marzec_stroke">#51ABB8</color>
-    <color name="marzec_just_text">#AAE6EE</color>
+    <color name="marzec_day_title">#00B0FF</color>
+    <color name="marzec_stroke">#0091EA</color>
+    <color name="marzec_just_text">#40C4FF</color>
 
-    <color name="kwiecien_day_title">#C92716</color>
-    <color name="kwiecien_stroke">#A01506</color>
-    <color name="kwiecien_just_text">#E84B3A</color>
+    <color name="kwiecien_day_title">#D84315</color>
+    <color name="kwiecien_stroke">#BF360C</color>
+    <color name="kwiecien_just_text">#FF5722</color>
 
-    <color name="maj_day_title">#ACC349</color>
-    <color name="maj_stroke">#8BA128</color>
-    <color name="maj_just_text">#D4E878</color>
+    <color name="maj_day_title">#689F38</color>
+    <color name="maj_stroke">#558B2F</color>
+    <color name="maj_just_text">#8BC34A</color>
 
-    <color name="czerwiec_day_title">#D77D2C</color>
-    <color name="czerwiec_stroke">#AA5B14</color>
-    <color name="czerwiec_just_text">#EC9B52</color>
+    <color name="czerwiec_day_title">#EF6C00</color>
+    <color name="czerwiec_stroke">#E65100</color>
+    <color name="czerwiec_just_text">#EF6C00</color>
 
     <color name="lipiec_day_title">#19A5B9</color>
     <color name="lipiec_stroke">#028597</color>
     <color name="lipiec_just_text">#39b8c9</color>
 
-    <color name="sierpien_day_title">#CDB803</color>
-    <color name="sierpien_stroke">#A29200</color>
-    <color name="sierpien_just_text">#FAE41A</color>
+    <color name="sierpien_day_title">#FFC400</color>
+    <color name="sierpien_stroke">#FFAB00</color>
+    <color name="sierpien_just_text">#FFD740</color>
 
     <color name="wrzesien_day_title">#6C9E3D</color>
     <color name="wrzesien_stroke">#4B7B1D</color>
@@ -52,13 +52,13 @@
     <color name="pazdziernik_stroke">#B02808</color>
     <color name="pazdziernik_just_text">#F66441</color>
 
-    <color name="listopad_day_title">#041895</color>
-    <color name="listopad_stroke">#021279</color>
-    <color name="listopad_just_text">#0820B6</color>
+    <color name="listopad_day_title">#283593</color>
+    <color name="listopad_stroke">#1A237E</color>
+    <color name="listopad_just_text">#3F51B5</color>
 
 
-    <color name="grudzien_day_title">#AE1536</color>
-    <color name="grudzien_stroke">#8A0320</color>
-    <color name="grudzien_just_text">#cf3153</color>
+    <color name="grudzien_day_title">#C62828</color>
+    <color name="grudzien_stroke">#B71C1C</color>
+    <color name="grudzien_just_text">#F44336</color>
 
 </resources>

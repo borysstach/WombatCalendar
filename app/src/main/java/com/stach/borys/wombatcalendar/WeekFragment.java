@@ -172,12 +172,12 @@ public class WeekFragment extends Fragment {
                     if (events.size() <= 4) {
                         for (int i = 0; i < events.size(); i++) {
                             mEventViews.get(i).setVisibility(View.VISIBLE);
-                            mEventViews.get(i).setText(" * " + events.get(i).getTitle());
+                            mEventViews.get(i).setText(formatEvent(events.get(i).getTitle()));
                         }
                     } else {
                         for (int i = 0; i < 3; i++) {
                             mEventViews.get(i).setVisibility(View.VISIBLE);
-                            mEventViews.get(i).setText(" * " + events.get(i).getTitle());
+                            mEventViews.get(i).setText(formatEvent(events.get(i).getTitle() ));
                         }
                         mEventViews.get(3).setVisibility(View.VISIBLE);
                         mEventViews.get(3).setText(" +" + (events.size() - 3));
@@ -191,6 +191,10 @@ public class WeekFragment extends Fragment {
             resources = null;
             intPx = null;
         }
+    }
+
+    private String formatEvent (String eventTitle){
+        return String.format(getActivity().getResources().getString(R.string.format_event), eventTitle);
     }
 
     ////////////////////////////             ADAPTER

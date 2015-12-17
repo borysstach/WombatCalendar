@@ -8,18 +8,10 @@
     <style name="AppTheme.Base" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/back</item>
         <item name="colorPrimaryDark">@color/my_primary_dark</item>
-        <item name="colorAccent">@color/my_primary_light</item>
-        <item name="android:textColorPrimary">@color/my_primary_dark</item>
-        <item name="android:textColorSecondary">@color/stroke</item>
-        <item name="actionMenuTextColor">@color/my_primary_dark</item>
-    </style>
-    <style name="AppTheme.Base.grudzien" parent="Theme.AppCompat.NoActionBar">
-        <item name="colorPrimary">@color/back</item>
-        <item name="colorPrimaryDark">@color/stroke</item>
-        <item name="colorAccent">@color/stroke</item>
-        <item name="android:textColorPrimary">@color/stroke</item>
-        <item name="android:textColorSecondary">@color/stroke</item>
-        <item name="actionMenuTextColor">@color/stroke</item>
+        <item name="colorAccent">@color/day_stroke</item>
+        <item name="android:textColorPrimary">@color/day_stroke</item>
+        <item name="android:textColorSecondary">@color/day_stroke</item>
+        <item name="android:windowBackground">@color/back</item>
     </style>
 
     <style name="title">
