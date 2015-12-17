@@ -153,6 +153,9 @@ public class WeekFragment extends Fragment {
             //change stroke color depend of month
             GradientDrawable strokeDrawable = (GradientDrawable) ContextCompat.getDrawable(getActivity(), getActivity().getResources().getIdentifier("stroke_shape", "drawable", getActivity().getPackageName()));
             String monthColorString = mMonthColorStrings.get(mCurrentMonth) + "_stroke";
+            if (isToday(cloneCalendar)){
+                intPx = intPx*3;
+            }
             strokeDrawable.setStroke(intPx, ContextCompat.getColor(getActivity(), getActivity().getResources().getIdentifier(monthColorString, "color", getActivity().getPackageName())));
             mLinearLayout.setBackground(strokeDrawable);
 
@@ -191,6 +194,12 @@ public class WeekFragment extends Fragment {
             resources = null;
             intPx = null;
         }
+    }
+    private boolean isToday(Calendar calendar){
+        if (calendar.get(Calendar.DAY_OF_YEAR) == Calendar.getInstance().get(Calendar.DAY_OF_YEAR) && calendar.get(Calendar.YEAR) == Calendar.getInstance().get(Calendar.YEAR)){
+            return true;
+        }
+        return false;
     }
 
     private String formatEvent (String eventTitle){

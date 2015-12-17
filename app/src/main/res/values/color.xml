@@ -11,6 +11,7 @@
     <color name="my_primary_light">#B6B6B6</color>
     <color name="day_stroke_back">#ffffff</color>
     <color name="day_stroke">#017aa9</color>
+    <color name="today_stroke">#76FF03</color>
 
     <color name="styczen_day_title">#95436E</color>
     <color name="styczen_stroke">#7B2854</color>
