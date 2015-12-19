@@ -36,10 +36,12 @@
     <string name="p_december">grudzien</string>
 
     <string name="action_settings">Settings</string>
+    <string name="acton_month">Miesiąc</string>
     <string name="title_activity_day">DayActivity</string>
 
     <string name="whole_day_event">Dzisiaj:</string>
 
     <string name="format_event">\u2022 %1$s</string>
+    <string name="title_activity_month">MonthActivity</string>
 
 </resources>

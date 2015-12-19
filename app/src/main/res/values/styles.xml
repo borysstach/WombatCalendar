@@ -12,6 +12,17 @@
         <item name="android:textColorPrimary">@color/day_stroke</item>
         <item name="android:textColorSecondary">@color/day_stroke</item>
         <item name="android:windowBackground">@color/back</item>
+        <item name="android:actionMenuTextColor">@color/my_primary_dark</item>
+    </style>
+
+    <style name="AppTheme.Week" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:colorBackground">@color/back</item>
+        <item name="colorPrimary">@color/back</item>
+        <item name="colorPrimaryDark">@color/back</item>
+        <item name="colorAccent">@color/my_primary_dark</item>
+        <item name="android:textColorPrimary">@color/my_primary_dark</item>
+        <item name="android:textColorSecondary">@color/my_primary_dark</item>
+        <item name="android:windowBackground">@color/back</item>
     </style>
 
     <style name="title">
@@ -52,4 +63,8 @@
         <item name="android:duplicateParentState">true</item>
         <item name="android:visibility">gone</item>
     </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 </resources>
