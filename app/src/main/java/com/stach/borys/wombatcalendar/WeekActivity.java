@@ -42,11 +42,7 @@ public class WeekActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.week_view_pager);
-        WeekPageAdapter mWeekPageAdapter = new WeekPageAdapter(getSupportFragmentManager());
-        mViewPager = (ViewPager) findViewById(R.id.week_viewpager);
-        mViewPager.setAdapter(mWeekPageAdapter);
 
         mToolBarImage = (ImageView) findViewById(R.id.tool_image);
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
@@ -86,20 +82,22 @@ public class WeekActivity extends AppCompatActivity {
         mMemoryCache = new LruCache<String, Bitmap>(cacheSize);
 
         if(savedInstanceState != null) {
-            setActionBarStyle(savedInstanceState.getInt("position"));
-            mViewPager.setCurrentItem(savedInstanceState.getInt("position"));
+            mPosition = savedInstanceState.getInt("position");
         } else {
-            setActionBarStyle(MAX_PAGE / 2);
-            mViewPager.setCurrentItem(MAX_PAGE / 2);
+            mPosition = MAX_PAGE/2;
         }
+        setActionBarStyle(mPosition);
+        //mViewPager.setCurrentItem(mPosition);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        //listen change fragments
+        WeekPageAdapter mWeekPageAdapter = new WeekPageAdapter(getSupportFragmentManager());
+        mViewPager = (ViewPager) findViewById(R.id.week_viewpager);
+        mViewPager.setAdapter(mWeekPageAdapter);
+        mViewPager.setCurrentItem(mPosition);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }

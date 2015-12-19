@@ -79,7 +79,6 @@ public class WeekFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.week_view_fragment, container, false);
-        //mWeek = new WeekData(new ArrayList<EventData>());
         final RecyclerView mWeekRecyclerView = (RecyclerView) rootView.findViewById(R.id.week_recycler_view);
         Integer gridSize = 2;
         if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -240,7 +239,7 @@ public class WeekFragment extends Fragment {
     private void setDate() {
         mCalendar = Calendar.getInstance();
         mCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        mCalendar.add(Calendar.WEEK_OF_YEAR, (mNumberOfFragment));
+        mCalendar.add(Calendar.WEEK_OF_YEAR, mNumberOfFragment);
     }
 
     @Override
@@ -249,7 +248,6 @@ public class WeekFragment extends Fragment {
         mMonthColorStrings = null;
         mCalendar = null;
         mDaysStrings = null;
-        mNumberOfFragment = null;
         mCurrentMonth = null;
     }
 }

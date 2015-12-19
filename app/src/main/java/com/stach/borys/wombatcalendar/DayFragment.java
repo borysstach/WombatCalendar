@@ -44,7 +44,6 @@ public class DayFragment extends Fragment {
         long end = CalendarDataSource.getEndInMillis(mCalendar);
         DayData day = new DayData(readerEvents.getEvents(begin, end));
         mEvents = day.getSortedEvents();
-
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,11 +56,6 @@ public class DayFragment extends Fragment {
 
         return rootView;
     }
-
-    ////////////////////////////             VIEW HOLDER
-
-
-    ////////////////////////////             ADAPTER
 
     public class SingleDayRecyclerAdapter extends RecyclerView.Adapter<CustomViewHolder> {
 

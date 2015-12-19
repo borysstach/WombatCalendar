@@ -53,13 +53,17 @@ public class DayActivity extends AppCompatActivity {
         mDay = intent.getIntExtra("day",1);
         mCalendar.set(mYear, mMonth, mDay);
 
+        mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.day_floating_action_button);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         DayPageAdapter mDayPageAdapter = new DayPageAdapter(getSupportFragmentManager());
         ViewPager mViewPager = (ViewPager) findViewById(R.id.day_viewpager);
         mViewPager.setAdapter(mDayPageAdapter);
         mViewPager.setCurrentItem(MAX_PAGE / 2);
-
-        mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.day_floating_action_button);
     }
 
     public class DayPageAdapter extends FragmentStatePagerAdapter {
