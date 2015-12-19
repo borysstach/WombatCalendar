@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="@dimen/activitu_half_margin"
-        android:layout_marginBottom="@dimen/activitu_half_margin"
-        android:paddingLeft="16dp"
-              android:paddingTop="@dimen/activity_vertical_margin"
+<LinearLayout android:id="@+id/day_event_linear_layout"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="@dimen/activitu_half_margin"
+              android:layout_marginTop="@dimen/activitu_half_margin"
+              android:background="@drawable/day_stroke_shape"
+              android:orientation="horizontal"
               android:paddingBottom="@dimen/activity_vertical_margin"
-        android:background="@drawable/day_stroke_shape">
+              android:paddingLeft="16dp"
+              android:paddingTop="@dimen/activity_vertical_margin">
 
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:clickable="false">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:clickable="false">
 
             <TextView
                 android:id="@+id/starting_hour"
@@ -39,7 +42,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:clickable="false">
 
             <TextView
                 android:id="@+id/ending_hour"
@@ -60,12 +64,12 @@
 
     <TextView
         android:id="@+id/specific_time_event_name"
+        style="@style/subtittle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="8dp"
         android:gravity="center"
         android:textSize="20sp"
-        style="@style/subtittle"
         />
 
 </LinearLayout>

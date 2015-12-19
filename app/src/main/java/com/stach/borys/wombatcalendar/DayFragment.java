@@ -1,12 +1,17 @@
 package com.stach.borys.wombatcalendar;
 
+import android.content.ContentUris;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.stach.borys.wombatcalendar.data.CalendarDataSource;
@@ -66,6 +71,7 @@ public class DayFragment extends Fragment {
             private TextView mEventStartMinute;
             private TextView mEventEndHour;
             private TextView mEventEndMinute;
+            private LinearLayout mEventLayout;
 
             public DayEventViewHolder(View itemView) {
                 super(itemView);
@@ -74,14 +80,24 @@ public class DayFragment extends Fragment {
                 mEventStartMinute = (TextView) itemView.findViewById(R.id.starting_minute);
                 mEventEndHour = (TextView) itemView.findViewById(R.id.ending_hour);
                 mEventEndMinute = (TextView) itemView.findViewById(R.id.ending_minute);
+                mEventLayout = (LinearLayout) itemView.findViewById(R.id.day_event_linear_layout);
             }
 
-            public void bindEvent(EventData event) {
+            public void bindEvent(final EventData event) {
                 mEventTitle.setText(event.getTitle());
                 mEventStartHour.setText("" + event.getStartingHour());
                 mEventStartMinute.setText(addZero(event.getStartingMinutes()));
                 mEventEndHour.setText("" + event.getEndingHour());
                 mEventEndMinute.setText(addZero(event.getEndingMinutes()));
+                mEventLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Uri uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, event.getId());
+                        Intent intent = new Intent(Intent.ACTION_VIEW)
+                                .setData(uri);
+                        startActivity(intent);
+                    }
+                });
             }
         }
 
@@ -95,14 +111,25 @@ public class DayFragment extends Fragment {
         class AllDayEventViewHolder extends CustomViewHolder {
 
             private TextView mEventTitle;
+            private LinearLayout mEventLayout;
 
             public AllDayEventViewHolder(View itemView) {
                 super(itemView);
+                mEventLayout = (LinearLayout) itemView.findViewById(R.id.day_allday_event_linear_layout);
                 mEventTitle = (TextView) itemView.findViewById(R.id.all_day_time_event_name);
             }
 
-            public void bindEvent(EventData event) {
+            public void bindEvent(final EventData event) {
                 mEventTitle.setText(event.getTitle());
+                mEventLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Uri uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, event.getId());
+                        Intent intent = new Intent(Intent.ACTION_VIEW)
+                                .setData(uri);
+                        startActivity(intent);
+                    }
+                });
             }
 
         }

@@ -1,5 +1,5 @@
 <resources xmlns:xliff="http://schemas.android.com/tools">
-    <string name="app_name">Wombat Calendar</string>
+    <string name="app_name">Kalendarz Wombata</string>
 
     <string name="monday">poniedziałek</string>
     <string name="tuesday">wtorek</string>

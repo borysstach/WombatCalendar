@@ -12,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -82,6 +83,7 @@ public class DayActivity extends AppCompatActivity {
             super.setPrimaryItem(container, position, object);
             final Calendar calendar = (Calendar) mCalendar.clone();
             calendar.add(Calendar.DAY_OF_MONTH, position - MAX_PAGE / 2);
+            TextView title = (TextView) findViewById(R.id.day_toolbar_tittle);
             mCollapsingToolbarLayout.setTitle((mDaysStrings.get(calendar.get(Calendar.DAY_OF_WEEK) - 1) + " " + calendar.get(Calendar.DAY_OF_MONTH)));
             mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
                 @Override

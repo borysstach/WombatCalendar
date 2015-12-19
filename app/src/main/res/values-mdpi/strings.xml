@@ -1,0 +1,9 @@
+<resources xmlns:xliff="http://schemas.android.com/tools">
+    <string name="monday">poniedz.</string>
+    <string name="tuesday">wtorek</string>
+    <string name="wednesday">środa</string>
+    <string name="thursday">czwartek</string>
+    <string name="friday">piątek</string>
+    <string name="saturday">sobota</string>
+    <string name="sunday">niedziela</string>
+</resources>

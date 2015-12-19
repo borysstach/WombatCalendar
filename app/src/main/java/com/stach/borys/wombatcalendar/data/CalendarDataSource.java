@@ -42,6 +42,7 @@ public class CalendarDataSource {
                 do {
                     //save id of every event this day
                     EventData singleEvent = new EventData();
+                    singleEvent.setId(cursor.getLong(0));
                     singleEvent.setBegin(cursor.getLong(1));
                     singleEvent.setEnd(cursor.getLong(2));
                     singleEvent.setTitle(cursor.getString(3));
