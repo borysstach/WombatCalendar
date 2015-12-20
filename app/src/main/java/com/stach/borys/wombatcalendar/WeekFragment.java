@@ -78,14 +78,14 @@ public class WeekFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.week_view_fragment, container, false);
-        final RecyclerView mWeekRecyclerView = (RecyclerView) rootView.findViewById(R.id.week_recycler_view);
+        View rootView = inflater.inflate(R.layout.week_fragment, container, false);
+        final RecyclerView weekRecyclerView = (RecyclerView) rootView.findViewById(R.id.week_recycler_view);
         Integer gridSize = 2;
         if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             gridSize = 3;
         }
-        mWeekRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), gridSize));
-        mWeekRecyclerView.setAdapter(new DayOfWeekRecyclerAdapter());
+        weekRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), gridSize));
+        weekRecyclerView.setAdapter(new DayOfWeekRecyclerAdapter());
         new Thread(new Runnable() {
             public void run() {
                 Calendar endOfWeek = Calendar.getInstance();
@@ -99,7 +99,7 @@ public class WeekFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            mWeekRecyclerView.setAdapter(new DayOfWeekRecyclerAdapter());
+                            weekRecyclerView.setAdapter(new DayOfWeekRecyclerAdapter());
                         }
                     });
                 }
@@ -217,7 +217,7 @@ public class WeekFragment extends Fragment {
         public DayOfWeekViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            View view = layoutInflater.inflate(R.layout.week_view_day, parent, false);
+            View view = layoutInflater.inflate(R.layout.week_day_view, parent, false);
             return new DayOfWeekViewHolder(view);
         }
 

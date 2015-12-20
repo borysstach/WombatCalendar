@@ -54,7 +54,7 @@ public class DayFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.day_view, container, false);
+        View rootView = inflater.inflate(R.layout.day_fragment, container, false);
         RecyclerView mDayRecyclerView = (RecyclerView) rootView.findViewById(R.id.day_events_recycler);
         mDayRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mDayRecyclerView.setAdapter(new SingleDayRecyclerAdapter());

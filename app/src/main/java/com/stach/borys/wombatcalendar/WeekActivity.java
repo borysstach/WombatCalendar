@@ -46,7 +46,7 @@ public class WeekActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.week_view_pager);
+        setContentView(R.layout.activity_week);
         Toolbar toolbar = (Toolbar) findViewById(R.id.week_toolbar);
         setSupportActionBar(toolbar);
         mToolBarImage = (ImageView) findViewById(R.id.tool_image);
@@ -98,9 +98,9 @@ public class WeekActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        WeekPageAdapter mWeekPageAdapter = new WeekPageAdapter(getSupportFragmentManager());
+        WeekPageAdapter weekPageAdapter = new WeekPageAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.week_viewpager);
-        mViewPager.setAdapter(mWeekPageAdapter);
+        mViewPager.setAdapter(weekPageAdapter);
         mViewPager.setCurrentItem(mPosition);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
