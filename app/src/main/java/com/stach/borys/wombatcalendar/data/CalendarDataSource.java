@@ -1,8 +1,11 @@
 package com.stach.borys.wombatcalendar.data;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.provider.CalendarContract.Instances;
+
+import com.stach.borys.wombatcalendar.WeekActivity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -34,25 +37,27 @@ public class CalendarDataSource {
                         Instances.TITLE,
                         Instances.ALL_DAY,
                         Instances.EVENT_ID};
-        Cursor cursor;
-        //cursor get needed data
-        cursor = Instances.query(mContext.getContentResolver(), instanceQuery, beginMillis, endMillis);
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                do {
-                    //save id of every event this day
-                    EventData singleEvent = new EventData();
-                    singleEvent.setId(cursor.getLong(0));
-                    singleEvent.setBegin(cursor.getLong(1));
-                    singleEvent.setEnd(cursor.getLong(2));
-                    singleEvent.setTitle(cursor.getString(3));
-                    singleEvent.setAllDay(cursor.getInt(4));
-                    singleEvent.setId(cursor.getLong(5));
-                    allEvents.add(singleEvent);
-                } while (cursor.moveToNext());
+
+        SharedPreferences settings = mContext.getSharedPreferences(WeekActivity.PREFS_NAME, 0);
+        if (settings.getBoolean("permission", false)) {
+          Cursor cursor = Instances.query(mContext.getContentResolver(), instanceQuery, beginMillis, endMillis);
+            if (cursor != null) {
+                if (cursor.moveToFirst()) {
+                    do {
+                        //save id of every event this day
+                        EventData singleEvent = new EventData();
+                        singleEvent.setId(cursor.getLong(0));
+                        singleEvent.setBegin(cursor.getLong(1));
+                        singleEvent.setEnd(cursor.getLong(2));
+                        singleEvent.setTitle(cursor.getString(3));
+                        singleEvent.setAllDay(cursor.getInt(4));
+                        singleEvent.setId(cursor.getLong(5));
+                        allEvents.add(singleEvent);
+                    } while (cursor.moveToNext());
+                }
+                //always close cursor!!
+                cursor.close();
             }
-            //always close cursor!!
-            cursor.close();
         }
 
         return allEvents;

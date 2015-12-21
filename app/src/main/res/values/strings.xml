@@ -45,4 +45,6 @@
     <string name="format_event">\u2022 %1$s</string>
     <string name="title_activity_month">MonthActivity</string>
 
+    <string name="permission_toast">Bez dostępu do kalendarza, będzie tu trochę pusto :(</string>
+
 </resources>

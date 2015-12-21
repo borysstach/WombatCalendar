@@ -1,13 +1,18 @@
 package com.stach.borys.wombatcalendar;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -16,11 +21,13 @@ import android.support.v4.util.LruCache;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,6 +40,8 @@ public class WeekActivity extends AppCompatActivity {
     public static final String PICTURE_INTENT = "picture";
     public static final String MONTH_INTENT = "month";
     public static final String YEAR_INTENT = "year";
+    private static final int MY_PERMISSIONS_REQUEST_READ_CALENDAR = 123;
+    public static final String PREFS_NAME = "MyPrefsFile";
 
     private ViewPager mViewPager;
     private ImageView mToolBarImage;
@@ -87,13 +96,39 @@ public class WeekActivity extends AppCompatActivity {
         final int cacheSize = 55 * 1024 * 1024;
         mMemoryCache = new LruCache<String, Bitmap>(cacheSize);
 
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             mPosition = savedInstanceState.getInt("position");
         } else {
-            mPosition = MAX_PAGE/2;
+            mPosition = MAX_PAGE / 2;
         }
         setActionBarStyle(mPosition);
-        //mViewPager.setCurrentItem(mPosition);
+
+        if (Build.VERSION.SDK_INT >= 23) {
+            // Marshmallow+
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.READ_CALENDAR)
+                    != PackageManager.PERMISSION_GRANTED) {
+
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        Manifest.permission.READ_CALENDAR)) {
+                    Toast.makeText(this, getResources().getString(R.string.permission_toast), Toast.LENGTH_LONG)
+                            .show();
+
+                } else {
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.READ_CALENDAR},
+                            MY_PERMISSIONS_REQUEST_READ_CALENDAR);
+                }
+            }
+        } else {
+            // Pre-Marshmallow
+            SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putBoolean("permission", true);
+            editor.commit();
+            Log.d("permission", "gained");
+        }
+
     }
 
     @Override
@@ -196,12 +231,12 @@ public class WeekActivity extends AppCompatActivity {
             //in new thread, cash images for next months
             new Thread(new Runnable() {
                 public void run() {
-                    Integer removePreviousMonth = (MONTH +10)%12;
+                    Integer removePreviousMonth = (MONTH + 10) % 12;
                     String removePreviousMonthStr = mMonthPictureStrings.get(removePreviousMonth);
                     removeBitmapFromMemoryCache(removePreviousMonthStr);
                     String removeNextMonthStr = mMonthPictureStrings.get((MONTH + 2) % 12);
                     removeBitmapFromMemoryCache(removeNextMonthStr);
-                    Integer addPreviousMonth = (MONTH +11)%12;
+                    Integer addPreviousMonth = (MONTH + 11) % 12;
                     String previousMonthStr = mMonthPictureStrings.get(addPreviousMonth);
                     Bitmap previousMonthPic = BitmapFactory.decodeResource(getResources(),
                             getResources().getIdentifier(previousMonthStr, "drawable", getPackageName()));
@@ -266,7 +301,7 @@ public class WeekActivity extends AppCompatActivity {
         mPosition = null;
     }
 
-        @Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -285,10 +320,36 @@ public class WeekActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.action_back_to_now) {
-           mViewPager.setCurrentItem(MAX_PAGE/2);
+            mViewPager.setCurrentItem(MAX_PAGE / 2);
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_CALENDAR: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putBoolean("permission", true);
+                    editor.commit();
+                    Log.d("permission", "gained");
+
+                } else {
+
+                    SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putBoolean("permission", false);
+                    editor.commit();
+                    Log.d("permission", "denied");
+                }
+                return;
+            }
+        }
     }
 }
 
