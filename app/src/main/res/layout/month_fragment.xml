@@ -8,38 +8,31 @@
         android:id="@+id/month_image"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
-        android:src="@drawable/styczen"/>
+        android:layout_weight="@integer/month_image_weight"/>
     <TextView
         android:id="@+id/month_line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/day_stroke"
-        android:layout_marginTop="@dimen/activity_vertical_margin"/>
+        android:layout_marginTop="@dimen/activity_half_margin"/>
     <TextView
         android:text="STYCZEŃ"
         android:id="@+id/month_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/day_stroke"
         android:textSize="20sp"
-        android:background="@color/day_stroke_back"
         android:gravity="center"/>
     <TextView
         android:text="2015"
         android:id="@+id/month_year_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/day_stroke"
         android:textSize="16sp"
-        android:background="@color/day_stroke_back"
         android:gravity="center_horizontal|top"/>
 
     <LinearLayout
         android:id="@+id/month_week_panel"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/day_stroke">
+        android:layout_height="wrap_content">
 
         <TextView
             android:text="P"
@@ -96,8 +89,8 @@
         android:id="@+id/month_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3"
+        android:layout_weight="@integer/month_recycler_weight"
         android:background="@color/back"
-        android:layout_marginTop="@dimen/activitu_half_margin"/>
+        android:layout_marginTop="@dimen/activity_quarter_margin"/>
 
 </LinearLayout>

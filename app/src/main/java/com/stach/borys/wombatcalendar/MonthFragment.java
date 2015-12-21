@@ -250,5 +250,7 @@ public class MonthFragment extends Fragment {
         mMonthStrings = null;
         mMonthColorStrings = null;
         mMonthColor = null;
+        mMonthsEvents = null;
+        mMonthRecyclerView = null;
     }
 }

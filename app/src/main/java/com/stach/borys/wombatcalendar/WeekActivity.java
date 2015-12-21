@@ -21,7 +21,6 @@ import android.support.v4.util.LruCache;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -93,7 +92,9 @@ public class WeekActivity extends AppCompatActivity {
                 getString(R.string.p_december)));
 
         //make cash for images
-        final int cacheSize = 55 * 1024 * 1024;
+        Bitmap biggestPicture = BitmapFactory.decodeResource(getResources(),
+                getResources().getIdentifier("lipiec", "drawable", getPackageName()));
+        final int cacheSize = biggestPicture.getByteCount()*3;
         mMemoryCache = new LruCache<String, Bitmap>(cacheSize);
 
         if (savedInstanceState != null) {
@@ -126,7 +127,6 @@ public class WeekActivity extends AppCompatActivity {
             SharedPreferences.Editor editor = settings.edit();
             editor.putBoolean("permission", true);
             editor.commit();
-            Log.d("permission", "gained");
         }
 
     }
@@ -337,15 +337,12 @@ public class WeekActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putBoolean("permission", true);
                     editor.commit();
-                    Log.d("permission", "gained");
-
                 } else {
 
                     SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putBoolean("permission", false);
                     editor.commit();
-                    Log.d("permission", "denied");
                 }
                 return;
             }

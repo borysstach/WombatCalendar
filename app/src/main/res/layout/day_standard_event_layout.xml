@@ -3,13 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/activitu_half_margin"
-    android:layout_marginTop="@dimen/activitu_half_margin"
+    android:layout_marginBottom="@dimen/activity_quarter_margin"
+    android:layout_marginTop="@dimen/activity_quarter_margin"
     android:orientation="horizontal"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingTop="@dimen/activity_vertical_margin">
+    android:paddingBottom="@dimen/activity_half_margin"
+    android:paddingLeft="@dimen/activity_half_margin"
+    android:paddingRight="@dimen/activity_half_margin"
+    android:paddingTop="@dimen/activity_half_margin">
 
     <TextView
         android:id="@+id/standard_event_name"
