@@ -16,7 +16,6 @@ import android.support.v4.util.LruCache;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,7 +30,9 @@ import java.util.List;
 public class WeekActivity extends AppCompatActivity {
 
     public static final int MAX_PAGE = 200;
-    public static final String DAY_INTENT_PICTURE = "picture";
+    public static final String PICTURE_INTENT = "picture";
+    public static final String MONTH_INTENT = "month";
+    public static final String YEAR_INTENT = "year";
 
     private ViewPager mViewPager;
     private ImageView mToolBarImage;
@@ -161,7 +162,7 @@ public class WeekActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ImageActivity.class);
-                intent.putExtra(DAY_INTENT_PICTURE, picture);
+                intent.putExtra(PICTURE_INTENT, picture);
                 startActivity(intent);
             }
         });
@@ -269,7 +270,6 @@ public class WeekActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-            Log.d("menu", "create");
         return true;
     }
 
@@ -283,6 +283,8 @@ public class WeekActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_month) {
             Intent intent = new Intent(this, MonthActivity.class);
+            intent.putExtra(MONTH_INTENT, getCalendarFromPosition(mPosition).get(Calendar.MONTH));
+            intent.putExtra(YEAR_INTENT, getCalendarFromPosition(mPosition).get(Calendar.YEAR));
             startActivity(intent);
             return true;
         }

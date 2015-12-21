@@ -200,5 +200,10 @@ public class DayFragment extends Fragment {
         }
     }
 
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mCalendar = null;
+        mEvents = null;
+    }
 }

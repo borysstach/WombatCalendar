@@ -2,7 +2,6 @@
 <resources>
     <color name="whole_day_background">#FFCDD2</color>
     <color name="whole_day_text">#B6B6B6</color>
-    <color name="line">#BDBDBD</color>
     <color name="day_title">#a03968</color>
     <color name="just_text">#212121</color>
     <color name="back">#F5F5F5</color>
@@ -12,6 +11,8 @@
     <color name="day_stroke_back">#ffffff</color>
     <color name="day_stroke">#017aa9</color>
     <color name="today_stroke">#76FF03</color>
+    <color name="saturday_red">#CFD8DC</color>
+    <color name="sunday_red">#546E7A</color>
 
     <color name="styczen_day_title">#95436E</color>
     <color name="styczen_stroke">#7B2854</color>

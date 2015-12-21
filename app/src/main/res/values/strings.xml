@@ -1,7 +1,7 @@
 <resources xmlns:xliff="http://schemas.android.com/tools">
     <string name="app_name">Kalendarz Wombata</string>
 
-    <string name="monday">poniedziałek</string>
+    <string name="monday">poniedział.</string>
     <string name="tuesday">wtorek</string>
     <string name="wednesday">środa</string>
     <string name="thursday">czwartek</string>

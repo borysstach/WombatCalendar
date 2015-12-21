@@ -7,6 +7,8 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
+import java.util.Calendar;
+
 public class MonthActivity extends AppCompatActivity {
 
     public static final int MAX_PAGE = 200;
@@ -20,7 +22,12 @@ public class MonthActivity extends AppCompatActivity {
         if(savedInstanceState != null) {
             mPosition = savedInstanceState.getInt("position");
         } else {
-            mPosition = MAX_PAGE/2;
+            Calendar today = Calendar.getInstance();
+            Integer thisMonth = today.get(Calendar.MONTH);
+            Integer intentMonth = getIntent().getIntExtra(WeekActivity.MONTH_INTENT, thisMonth);
+            Integer thisYear = today.get(Calendar.YEAR);
+            Integer intentYear = getIntent().getIntExtra(WeekActivity.YEAR_INTENT, thisYear);
+            mPosition = MAX_PAGE/2 + (intentYear - thisYear)*12 + intentMonth - thisMonth ;
         }
     }
 

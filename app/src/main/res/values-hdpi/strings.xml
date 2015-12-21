@@ -1,5 +1,5 @@
 <resources xmlns:xliff="http://schemas.android.com/tools">
-    <string name="monday">poniedz.</string>
+    <string name="monday">poniedziałek</string>
     <string name="tuesday">wtorek</string>
     <string name="wednesday">środa</string>
     <string name="thursday">czwartek</string>

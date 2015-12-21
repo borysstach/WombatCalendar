@@ -12,7 +12,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,13 +23,12 @@ public class DayActivity extends AppCompatActivity {
     public static final int MAX_PAGE = 200;
 
     private Calendar mCalendar;
-    private int mYear;
-    private int mMonth;
-    private int mDay;
+    private Integer mYear;
+    private Integer mMonth;
+    private Integer mDay;
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
     private List<String> mDaysStrings;
     private FloatingActionButton mFloatingActionButton;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +81,6 @@ public class DayActivity extends AppCompatActivity {
             super.setPrimaryItem(container, position, object);
             final Calendar calendar = (Calendar) mCalendar.clone();
             calendar.add(Calendar.DAY_OF_MONTH, position - MAX_PAGE / 2);
-            TextView title = (TextView) findViewById(R.id.day_toolbar_tittle);
             mCollapsingToolbarLayout.setTitle((mDaysStrings.get(calendar.get(Calendar.DAY_OF_WEEK) - 1) + " " + calendar.get(Calendar.DAY_OF_MONTH)));
             mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -102,7 +99,19 @@ public class DayActivity extends AppCompatActivity {
         }
     }
 
-//    @Override
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mCalendar = null;
+        mYear = null;
+        mMonth = null;
+        mDay = null;
+        mCollapsingToolbarLayout = null;
+        mDaysStrings = null;
+        mFloatingActionButton = null;
+    }
+
+    //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
 //        // Inflate the menu; this adds items to the action bar if it is present.
 //        getMenuInflater().inflate(R.menu.menu_main, menu);
