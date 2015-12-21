@@ -37,6 +37,7 @@
 
     <string name="action_settings">Settings</string>
     <string name="acton_month">Miesiąc</string>
+    <string name="acton_back_to_now">Dzisiaj</string>
     <string name="title_activity_day">DayActivity</string>
 
     <string name="whole_day_event">Dzisiaj:</string>

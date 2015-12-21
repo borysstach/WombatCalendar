@@ -6,4 +6,8 @@
           android:title="@string/acton_month"
           android:orderInCategory="100"
           app:showAsAction="never"/>
+      <item android:id="@+id/action_back_to_now"
+            android:title="@string/acton_back_to_now"
+            android:orderInCategory="100"
+            app:showAsAction="never"/>
 </menu>
