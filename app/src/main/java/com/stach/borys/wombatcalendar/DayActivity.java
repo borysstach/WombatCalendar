@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -26,14 +25,17 @@ public class DayActivity extends AppCompatActivity {
     private Integer mYear;
     private Integer mMonth;
     private Integer mDay;
+    private ViewPager mViewPager;
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
     private List<String> mDaysStrings;
-    private FloatingActionButton mFloatingActionButton;
+    private com.github.clans.fab.FloatingActionButton mFABadd;
+    private com.github.clans.fab.FloatingActionButton mFABback;
+    private com.github.clans.fab.FloatingActionButton mFABmonth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_day);
+        setContentView(R.layout.day_activity);
 
         mDaysStrings = new ArrayList<>(Arrays.asList(
                 getString(R.string.sunday),
@@ -49,18 +51,20 @@ public class DayActivity extends AppCompatActivity {
         Intent intent = getIntent();
         mYear = intent.getIntExtra("year", 2015);
         mMonth = intent.getIntExtra("month", 0);
-        mDay = intent.getIntExtra("day",1);
+        mDay = intent.getIntExtra("day", 1);
         mCalendar.set(mYear, mMonth, mDay);
 
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.day_floating_action_button);
+        mFABadd = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.fab_menu_add);
+        mFABback = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.fab_menu_back);
+        mFABmonth = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.fab_menu_month);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         DayPageAdapter mDayPageAdapter = new DayPageAdapter(getSupportFragmentManager());
-        ViewPager mViewPager = (ViewPager) findViewById(R.id.day_viewpager);
+        mViewPager = (ViewPager) findViewById(R.id.day_viewpager);
         mViewPager.setAdapter(mDayPageAdapter);
         mViewPager.setCurrentItem(MAX_PAGE / 2);
     }
@@ -82,12 +86,31 @@ public class DayActivity extends AppCompatActivity {
             final Calendar calendar = (Calendar) mCalendar.clone();
             calendar.add(Calendar.DAY_OF_MONTH, position - MAX_PAGE / 2);
             mCollapsingToolbarLayout.setTitle((mDaysStrings.get(calendar.get(Calendar.DAY_OF_WEEK) - 1) + " " + calendar.get(Calendar.DAY_OF_MONTH)));
-            mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+
+
+            mFABadd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(Intent.ACTION_INSERT)
                             .setData(CalendarContract.Events.CONTENT_URI)
                             .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, calendar.getTimeInMillis());
+                    startActivity(intent);
+                }
+            });
+
+            mFABback.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mViewPager.setCurrentItem(MAX_PAGE / 2);
+                }
+            });
+
+            mFABmonth.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(), MonthActivity.class);
+                    intent.putExtra(WeekActivity.MONTH_INTENT, mCalendar.get(Calendar.MONTH));
+                    intent.putExtra(WeekActivity.YEAR_INTENT, mCalendar.get(Calendar.YEAR));
                     startActivity(intent);
                 }
             });
@@ -108,7 +131,9 @@ public class DayActivity extends AppCompatActivity {
         mDay = null;
         mCollapsingToolbarLayout = null;
         mDaysStrings = null;
-        mFloatingActionButton = null;
+        mFABadd = null;
+        mFABback = null;
+        mFABmonth = null;
     }
 
     //    @Override

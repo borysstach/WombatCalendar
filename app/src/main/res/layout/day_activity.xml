@@ -44,14 +44,49 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/day_floating_action_button"
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/floating_action_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right|bottom"
         android:layout_marginBottom="@dimen/md_keylines"
         android:layout_marginRight="@dimen/md_keylines"
-        android:src="@drawable/ic_add_white_24dp"/>
+        app:menu_colorNormal="@color/day_stroke"
+        app:menu_colorPressed="@color/day_stroke"
+        app:menu_icon="@drawable/ic_filter_none_white_24dp">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_menu_month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_today_white_24dp"
+            app:fab_colorNormal="@color/day_stroke"
+            app:fab_colorPressed="@color/day_stroke"
+            app:fab_label="@string/acton_month"
+            app:fab_size="mini"/>
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_menu_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_reply_white_24dp"
+            app:fab_colorNormal="@color/day_stroke"
+            app:fab_colorPressed="@color/day_stroke"
+            app:fab_label="@string/acton_back_to_now"
+            app:fab_size="mini"/>
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_menu_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add_white_24dp"
+            app:fab_colorNormal="@color/day_stroke"
+            app:fab_colorPressed="@color/day_stroke"
+            app:fab_label="@string/action_add"
+            app:fab_size="mini"/>
+
+    </com.github.clans.fab.FloatingActionMenu>
 </android.support.design.widget.CoordinatorLayout>
 
 

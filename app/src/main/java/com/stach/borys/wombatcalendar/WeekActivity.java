@@ -4,14 +4,12 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,12 +19,13 @@ import android.support.v4.util.LruCache;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,18 +49,24 @@ public class WeekActivity extends AppCompatActivity {
     private List<String> mMonthPictureStrings;
     private LruCache<String, Bitmap> mMemoryCache;
     private Integer mPosition;
-    private FloatingActionButton mFloatingActionButton;
+    private FloatingActionMenu mFloatingActionMenu;
+    private FloatingActionButton mFABadd;
+    private FloatingActionButton mFABback;
+    private FloatingActionButton mFABmonth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_week);
+        setContentView(R.layout.week_activity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.week_toolbar);
         setSupportActionBar(toolbar);
         mToolBarImage = (ImageView) findViewById(R.id.tool_image);
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         mToolbarSubtitle = (TextView) findViewById(R.id.week_subtitle);
-        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.floating_action_button);
+        mFloatingActionMenu = (FloatingActionMenu) findViewById(R.id.floating_action_menu);
+        mFABadd = (FloatingActionButton) findViewById(R.id.fab_menu_add);
+        mFABback = (FloatingActionButton) findViewById(R.id.fab_menu_back);
+        mFABmonth = (FloatingActionButton) findViewById(R.id.fab_menu_month);
 
         mMonthStrings = new ArrayList<>(Arrays.asList(
                 getString(R.string.january),
@@ -183,12 +188,30 @@ public class WeekActivity extends AppCompatActivity {
 
         final Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.WEEK_OF_YEAR, position - MAX_PAGE / 2);
-        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+
+        mFABadd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_INSERT)
                         .setData(CalendarContract.Events.CONTENT_URI)
                         .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, calendar.getTimeInMillis());
+                startActivity(intent);
+            }
+        });
+
+        mFABback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewPager.setCurrentItem(MAX_PAGE / 2);
+            }
+        });
+
+        mFABmonth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), MonthActivity.class);
+                intent.putExtra(MONTH_INTENT, getCalendarFromPosition(mPosition).get(Calendar.MONTH));
+                intent.putExtra(YEAR_INTENT, getCalendarFromPosition(mPosition).get(Calendar.YEAR));
                 startActivity(intent);
             }
         });
@@ -212,7 +235,14 @@ public class WeekActivity extends AppCompatActivity {
             mCollapsingToolbarLayout.setCollapsedTitleTextColor(color);
             mCollapsingToolbarLayout.setExpandedTitleColor(color);
             mToolbarSubtitle.setTextColor(color);
-            mFloatingActionButton.setBackgroundTintList(ColorStateList.valueOf(color));
+            mFloatingActionMenu.setMenuButtonColorNormal(color);
+            mFloatingActionMenu.setMenuButtonColorPressed(color);
+            mFABadd.setColorNormal(color);
+            mFABadd.setColorPressed(color);
+            mFABback.setColorNormal(color);
+            mFABback.setColorPressed(color);
+            mFABmonth.setColorNormal(color);
+            mFABmonth.setColorPressed(color);
 
             Bitmap bitmap = getBitmapFromMemCache(picture);
             if (bitmap != null) {
@@ -299,31 +329,6 @@ public class WeekActivity extends AppCompatActivity {
         mMemoryCache = null;
         mMonthStrings = null;
         mPosition = null;
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_month) {
-            Intent intent = new Intent(this, MonthActivity.class);
-            intent.putExtra(MONTH_INTENT, getCalendarFromPosition(mPosition).get(Calendar.MONTH));
-            intent.putExtra(YEAR_INTENT, getCalendarFromPosition(mPosition).get(Calendar.YEAR));
-            startActivity(intent);
-            return true;
-        }
-        if (id == R.id.action_back_to_now) {
-            mViewPager.setCurrentItem(MAX_PAGE / 2);
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

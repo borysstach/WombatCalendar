@@ -17,7 +17,7 @@ public class MonthActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_month);
+        setContentView(R.layout.month_activity);
 
         if(savedInstanceState != null) {
             mPosition = savedInstanceState.getInt("position");
