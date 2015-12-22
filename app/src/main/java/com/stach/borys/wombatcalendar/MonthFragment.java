@@ -18,7 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.stach.borys.wombatcalendar.data.CalendarDataSource;
-import com.stach.borys.wombatcalendar.data.EventData;
+import com.stach.borys.wombatcalendar.data.Event;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,10 +28,10 @@ import java.util.List;
 public class MonthFragment extends Fragment {
 
     private Integer numberOfDays;
-    private Calendar mMonth;
+    private Calendar mCalendar;
     private List<String> mMonthStrings;
     private List<String> mMonthColorStrings;
-    private Boolean[] mMonthsEvents;
+    private Boolean[] mEventsModel;
     private Integer mMonthColor;
     private RecyclerView mMonthRecyclerView;
 
@@ -46,15 +46,6 @@ public class MonthFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Integer numberOfFragment = getArguments().getInt("num");
-        mMonth = Calendar.getInstance();
-        mMonth.set(Calendar.DAY_OF_MONTH, 1);
-        mMonth.add(Calendar.MONTH, numberOfFragment);
-        numberOfDays = mMonth.getActualMaximum(Calendar.DAY_OF_MONTH);
-        mMonthsEvents = new Boolean[numberOfDays];
-        for (int i = 0; i<numberOfDays;i++){
-            mMonthsEvents[i] = false;
-        }
         mMonthStrings = new ArrayList<>(Arrays.asList(
                 getString(R.string.january),
                 getString(R.string.february),
@@ -82,63 +73,18 @@ public class MonthFragment extends Fragment {
                 getString(R.string.p_october),
                 getString(R.string.p_november),
                 getString(R.string.p_december)));
+
+        setCalendar();
+        setEventsModel();
     }
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.month_fragment, container, false);
         mMonthRecyclerView = (RecyclerView) rootView.findViewById(R.id.month_recycler_view);
         mMonthRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 7));
         mMonthRecyclerView.setAdapter(new MonthRecyclerAdapter());
-
-        String monthColorString = mMonthColorStrings.get(mMonth.get(Calendar.MONTH)) + "_day_title";
-        mMonthColor = ContextCompat.getColor(getActivity(), getActivity().getResources().getIdentifier(monthColorString, "color", getActivity().getPackageName()));
-        TextView line = (TextView) rootView.findViewById(R.id.month_line);
-        line.setBackgroundColor(mMonthColor);
-        LinearLayout weekPanel = (LinearLayout) rootView.findViewById(R.id.month_week_panel);
-        weekPanel.setBackgroundColor(mMonthColor);
-
-        TextView monthTitle = (TextView) rootView.findViewById(R.id.month_title);
-        monthTitle.setText(mMonthStrings.get(mMonth.get(Calendar.MONTH)).toUpperCase());
-        monthTitle.setTextColor(mMonthColor);
-
-        TextView yearTitle = (TextView) rootView.findViewById(R.id.month_year_title);
-        yearTitle.setText("" + mMonth.get(Calendar.YEAR));
-        yearTitle.setTextColor(mMonthColor);
-
-        ImageView monthImage = (ImageView) rootView.findViewById(R.id.month_image);
-        final String monthPictureString = mMonthColorStrings.get(mMonth.get(Calendar.MONTH));
-        Bitmap monthPic = BitmapFactory.decodeResource(getResources(), getResources().getIdentifier(monthPictureString, "drawable", getActivity().getPackageName()));
-        monthImage.setImageBitmap(monthPic);
-        monthImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity().getApplicationContext(), ImageActivity.class);
-                intent.putExtra(WeekActivity.PICTURE_INTENT, monthPictureString);
-                startActivity(intent);
-            }
-        });
-
-        new Thread(new Runnable() {
-            public void run() {
-                Calendar cloneCalendar = (Calendar) mMonth.clone();
-                cloneCalendar.set(Calendar.DAY_OF_MONTH, 1);
-                long begin = CalendarDataSource.getBeginInMillis(cloneCalendar);
-                cloneCalendar.set(Calendar.DAY_OF_MONTH, numberOfDays);
-                long end = CalendarDataSource.getEndInMillis(cloneCalendar);
-                CalendarDataSource readerEvents = new CalendarDataSource(getContext());
-                List<EventData> WholeMonthEvents = readerEvents.getEvents(begin, end);
-                setEventsArray(WholeMonthEvents);
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mMonthRecyclerView.setAdapter(new MonthRecyclerAdapter());
-                        }
-                    });
-                }
-            }
-        }).start();
+        setStyle(rootView);
+        getData();
 
         return rootView;
     }
@@ -157,26 +103,34 @@ public class MonthFragment extends Fragment {
         }
 
         public void bindDay(final Integer day) {
+
             mDayNumber.setText("" + (day));
+            setColor(mEventsModel[day - 1]);
+            setonClickIntent(day);
+        }
+
+        private void setonClickIntent(final Integer day) {
+            mFrameLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), DayActivity.class);
+                    intent.putExtra("year", mCalendar.get(Calendar.YEAR));
+                    intent.putExtra("month", mCalendar.get(Calendar.MONTH));
+                    intent.putExtra("day", day);
+                    startActivity(intent);
+                }
+            });
+        }
+
+        private void setColor(Boolean aBoolean) {
             Integer oppositeColor = ContextCompat.getColor(getActivity(), R.color.day_stroke_back);
-            if (mMonthsEvents[day-1]){
+            if (aBoolean){
                 mDayNumber.setTextColor(oppositeColor);
                 mFrameLayout.setBackgroundColor(mMonthColor);
             } else {
                 mDayNumber.setTextColor(mMonthColor);
                 mFrameLayout.setBackgroundColor(oppositeColor);
             }
-
-            mFrameLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), DayActivity.class);
-                    intent.putExtra("year", mMonth.get(Calendar.YEAR));
-                    intent.putExtra("month", mMonth.get(Calendar.MONTH));
-                    intent.putExtra("day", day);
-                    startActivity(intent);
-                }
-            });
         }
 
     }
@@ -197,7 +151,7 @@ public class MonthFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(DayOfMonthViewHolder holder, int position) {
-            if (!(position < getDayOfWeekFromFirstDayOfMonth(mMonth))) {
+            if (thisMonth(position)) {
                 holder.bindDay(day);
                 day++;
             }
@@ -205,8 +159,111 @@ public class MonthFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return numberOfDays + getDayOfWeekFromFirstDayOfMonth(mMonth);
+            return numberOfDays + getDayOfWeekFromFirstDayOfMonth(mCalendar);
         }
+
+        private boolean thisMonth(int position) {
+            return position >= getDayOfWeekFromFirstDayOfMonth(mCalendar);
+        }
+    }
+
+    ////////////////////////// ENDING METHODS
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        numberOfDays = null;
+        mCalendar = null;
+        mMonthStrings = null;
+        mMonthColorStrings = null;
+        mMonthColor = null;
+        mEventsModel = null;
+    }
+
+    ///////////////////////  HELPING METHODS
+
+    private void setEventsModel() {
+        numberOfDays = mCalendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        mEventsModel = new Boolean[numberOfDays];
+        for (int i = 0; i<numberOfDays;i++){
+            mEventsModel[i] = false;
+        }
+    }
+
+    private void setCalendar() {
+        Integer numberOfFragment = getArguments().getInt("num");
+        mCalendar = Calendar.getInstance();
+        mCalendar.set(Calendar.DAY_OF_MONTH, 1);
+        mCalendar.add(Calendar.MONTH, numberOfFragment);
+    }
+
+    private void setStyle(View rootView) {
+        setMonthColor();
+        setElementsBackground(rootView);
+        setMonthTitles(rootView);
+        setMonthPicture(rootView);
+    }
+
+    private void getData() {
+        new Thread(new Runnable() {
+            public void run() {
+                Calendar cloneCalendar = (Calendar) mCalendar.clone();
+                cloneCalendar.set(Calendar.DAY_OF_MONTH, 1);
+                long begin = CalendarDataSource.getBeginInMillis(cloneCalendar);
+                cloneCalendar.set(Calendar.DAY_OF_MONTH, numberOfDays);
+                long end = CalendarDataSource.getEndInMillis(cloneCalendar);
+                CalendarDataSource readerEvents = new CalendarDataSource(getContext());
+                List<Event> WholeMonthEvents = readerEvents.getEvents(begin, end);
+
+                setEventsArray(WholeMonthEvents);
+
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mMonthRecyclerView.setAdapter(new MonthRecyclerAdapter());
+                        }
+                    });
+                }
+            }
+        }).start();
+    }
+
+    private void setMonthTitles(View rootView) {
+        TextView monthTitle = (TextView) rootView.findViewById(R.id.month_title);
+        monthTitle.setText(mMonthStrings.get(mCalendar.get(Calendar.MONTH)).toUpperCase());
+        monthTitle.setTextColor(mMonthColor);
+
+        TextView yearTitle = (TextView) rootView.findViewById(R.id.month_year_title);
+        yearTitle.setText("" + mCalendar.get(Calendar.YEAR));
+        yearTitle.setTextColor(mMonthColor);
+    }
+
+    private void setElementsBackground(View rootView) {
+        TextView line = (TextView) rootView.findViewById(R.id.month_line);
+        line.setBackgroundColor(mMonthColor);
+        LinearLayout weekPanel = (LinearLayout) rootView.findViewById(R.id.month_week_panel);
+        weekPanel.setBackgroundColor(mMonthColor);
+    }
+
+    private void setMonthColor() {
+        String monthColorString = mMonthColorStrings.get(mCalendar.get(Calendar.MONTH)) + "_day_title";
+        mMonthColor = ContextCompat.getColor(getActivity(), getActivity().getResources().getIdentifier(monthColorString, "color", getActivity().getPackageName()));
+    }
+
+    private void setMonthPicture(View rootView) {
+        ImageView monthImage = (ImageView) rootView.findViewById(R.id.month_image);
+        final String monthPictureString = mMonthColorStrings.get(mCalendar.get(Calendar.MONTH));
+        Bitmap monthPic = BitmapFactory.decodeResource(getResources(), getResources().getIdentifier(monthPictureString, "drawable", getActivity().getPackageName()));
+        monthImage.setImageBitmap(monthPic);
+        monthImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity().getApplicationContext(), ImageActivity.class);
+                intent.putExtra(WeekActivity.PICTURE_INTENT, monthPictureString);
+                startActivity(intent);
+            }
+        });
     }
 
     private Integer getDayOfWeekFromFirstDayOfMonth(Calendar firstDayOfMonth) {
@@ -230,27 +287,16 @@ public class MonthFragment extends Fragment {
         }
     }
 
-    private void setEventsArray(List<EventData> events){
-        for(EventData event : events){
-            mMonthsEvents[dayOfMonth(event)] = true ;
+    private void setEventsArray(List<Event> events){
+        for(Event event : events){
+            mEventsModel[dayOfMonth(event)] = true ;
         }
     }
 
-    private Integer dayOfMonth(EventData event){
+    private Integer dayOfMonth(Event event){
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(event.getBegin());
         return calendar.get(Calendar.DAY_OF_MONTH) - 1;
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        numberOfDays = null;
-        mMonth = null;
-        mMonthStrings = null;
-        mMonthColorStrings = null;
-        mMonthColor = null;
-        mMonthsEvents = null;
-        mMonthRecyclerView = null;
-    }
 }

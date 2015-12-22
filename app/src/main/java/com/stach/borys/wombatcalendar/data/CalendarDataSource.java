@@ -22,9 +22,9 @@ public class CalendarDataSource {
         mContext = context;
     }
 
-    public List<EventData> getEvents(long beginMillis, long endMillis) {
+    public List<Event> getEvents(long beginMillis, long endMillis) {
 
-        List<EventData> allEvents = new ArrayList<>();
+        List<Event> allEvents = new ArrayList<>();
 
         ///////////searching for Events id this day from Instances table
 
@@ -45,7 +45,7 @@ public class CalendarDataSource {
                 if (cursor.moveToFirst()) {
                     do {
                         //save id of every event this day
-                        EventData singleEvent = new EventData();
+                        Event singleEvent = new Event();
                         singleEvent.setId(cursor.getLong(0));
                         singleEvent.setBegin(cursor.getLong(1));
                         singleEvent.setEnd(cursor.getLong(2));
@@ -76,45 +76,5 @@ public class CalendarDataSource {
         endCalendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), 23, 59);
         return endCalendar.getTimeInMillis();
     }
-
-
-//    public List<CalendarData> getAllCalendars() {
-//        //list of calendars to return
-//        List<CalendarData> allCalendars = new ArrayList<>();
-//        //list of columns witch we want from provider
-//        String[] query =
-//                new String[]{
-//                        Calendars._ID,
-//                        Calendars.NAME,
-//                        Calendars.ACCOUNT_NAME,
-//                        Calendars.ACCOUNT_TYPE};
-//        Cursor cursor;
-//
-//        //get data from provider
-//        cursor =
-//                mContext.getContentResolver().
-//                        query(Calendars.CONTENT_URI,
-//                                query,
-//                                Calendars.VISIBLE + " = 1",
-//                                null,
-//                                Calendars._ID + " ASC");
-//        if (cursor != null) {
-//            //read cursor
-//            if (cursor.moveToFirst()) {
-//                do {
-//                    CalendarData singleCalendar = new CalendarData();
-//                    singleCalendar.setId(cursor.getLong(0));
-//                    singleCalendar.setDisplayName(cursor.getString(1));
-//                    singleCalendar.setAccountName(cursor.getString(2));
-//                    singleCalendar.setAccountType(cursor.getString(3));
-//                    allCalendars.add(singleCalendar);
-//                } while (cursor.moveToNext());
-//            }
-//            //always close cursor!!
-//            cursor.close();
-//        }
-//        return allCalendars;
-//
-//    }
 
 }

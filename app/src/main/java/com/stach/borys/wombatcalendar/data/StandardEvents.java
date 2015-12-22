@@ -1,8 +1,8 @@
 package com.stach.borys.wombatcalendar.data;
 
 public class StandardEvents {
-    public EventData morning = EventData.standardEventData("Spanko do ");
-    public EventData evening = EventData.standardEventData("Czas zawinąć się w kocyk i iść spać");
-    public EventData afternoon = EventData.standardEventData(" przerwy, czas na ciastko!");
-    public EventData freeDay = EventData.standardEventData("Cały dzień wolny!");
+    public Event morning = Event.standardEventData("Spanko do ");
+    public Event evening = Event.standardEventData("Czas zawinąć się w kocyk i iść spać");
+    public Event afternoon = Event.standardEventData(" przerwy, czas na ciastko!");
+    public Event freeDay = Event.standardEventData("Cały dzień wolny!");
 }

@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,8 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.stach.borys.wombatcalendar.data.CalendarDataSource;
-import com.stach.borys.wombatcalendar.data.EventData;
-import com.stach.borys.wombatcalendar.data.WeekData;
+import com.stach.borys.wombatcalendar.data.Event;
+import com.stach.borys.wombatcalendar.data.Week;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,7 +33,7 @@ public class WeekFragment extends Fragment {
     private Calendar mCalendar;
     private Integer mCurrentMonth;
     private Integer mNumberOfFragment;
-    private WeekData mWeek;
+    private Week mWeek;
 
     static WeekFragment newInstance(int num) {
 
@@ -71,8 +72,7 @@ public class WeekFragment extends Fragment {
                 getString(R.string.p_december)));
 
         mNumberOfFragment = getArguments().getInt("num");
-        setDate();
-        mCurrentMonth = mCalendar.get(Calendar.MONTH);
+        setCalendar();
     }
 
     @Override
@@ -80,31 +80,9 @@ public class WeekFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.week_fragment, container, false);
         final RecyclerView weekRecyclerView = (RecyclerView) rootView.findViewById(R.id.week_recycler_view);
-        Integer gridSize = 2;
-        if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            gridSize = 3;
-        }
-        weekRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), gridSize));
+        weekRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), getGridSize()));
         weekRecyclerView.setAdapter(new DayOfWeekRecyclerAdapter());
-        new Thread(new Runnable() {
-            public void run() {
-                Calendar endOfWeek = Calendar.getInstance();
-                endOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-                endOfWeek.add(Calendar.WEEK_OF_YEAR, (mNumberOfFragment));
-                long begin = CalendarDataSource.getBeginInMillis(mCalendar);
-                long end = CalendarDataSource.getEndInMillis(endOfWeek);
-                CalendarDataSource readerEvents = new CalendarDataSource(getContext());
-                mWeek = new WeekData(readerEvents.getEvents(begin, end));
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            weekRecyclerView.setAdapter(new DayOfWeekRecyclerAdapter());
-                        }
-                    });
-                }
-            }
-        }).start();
+        getData(weekRecyclerView);
         return rootView;
     }
 
@@ -113,7 +91,7 @@ public class WeekFragment extends Fragment {
     public class DayOfWeekViewHolder extends RecyclerView.ViewHolder {
 
         private TextView mDayName;
-        private List<TextView> mEventViews = new ArrayList<>();
+        private List<TextView> mEventViews;
         private LinearLayout mLinearLayout;
         private Calendar cloneCalendar;
         private TextView mNewActivityButton;
@@ -121,6 +99,7 @@ public class WeekFragment extends Fragment {
         public DayOfWeekViewHolder(View itemView) {
             super(itemView);
             //find view
+            mEventViews = new ArrayList<>();
             mDayName = (TextView) itemView.findViewById(R.id.day_name_text_view);
             mEventViews.add((TextView) itemView.findViewById(R.id.week_view_event_0));
             mEventViews.add((TextView) itemView.findViewById(R.id.week_view_event_1));
@@ -134,30 +113,16 @@ public class WeekFragment extends Fragment {
 
             cloneCalendar = (Calendar) mCalendar.clone();
             mDayName.setText(dayName);
-
-            //change color depend of month
-            String monthString = mMonthColorStrings.get(mCurrentMonth) + "_day_title";
-            String eventString = mMonthColorStrings.get(mCurrentMonth) + "_just_text";
-            Integer thisMonthColor = ContextCompat.getColor(getActivity(), getActivity().getResources().getIdentifier(monthString, "color", getActivity().getPackageName()));
-            Integer eventColor = ContextCompat.getColor(getActivity(), getActivity().getResources().getIdentifier(eventString, "color", getActivity().getPackageName()));
-            mDayName.setTextColor(thisMonthColor);
-            for (TextView event : mEventViews) {
-                event.setTextColor(eventColor);
+            if (mWeek != null) {
+                bindEvents();
             }
-            //get stroke width
-            Resources resources = getResources();
-            float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, resources.getDisplayMetrics());
-            Integer intPx = Math.round(px);
+            setTextColors();
+            setStroke();
+            setOnClickIntent();
 
-            //change stroke color depend of month
-            GradientDrawable strokeDrawable = (GradientDrawable) ContextCompat.getDrawable(getActivity(), getActivity().getResources().getIdentifier("stroke_shape", "drawable", getActivity().getPackageName()));
-            String monthColorString = mMonthColorStrings.get(mCurrentMonth) + "_stroke";
-            if (isToday(cloneCalendar)){
-                intPx = intPx*3;
-            }
-            strokeDrawable.setStroke(intPx, ContextCompat.getColor(getActivity(), getActivity().getResources().getIdentifier(monthColorString, "color", getActivity().getPackageName())));
-            mLinearLayout.setBackground(strokeDrawable);
+        }
 
+        private void setOnClickIntent() {
             mNewActivityButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -168,41 +133,60 @@ public class WeekFragment extends Fragment {
                     startActivity(intent);
                 }
             });
-            if (mWeek != null) {
-                List<EventData> events = mWeek.get(cloneCalendar.get(Calendar.DAY_OF_WEEK));
+        }
+
+        private void bindEvents() {
+                List<Event> events = mWeek.get(cloneCalendar.get(Calendar.DAY_OF_WEEK));
                 if (events != null) {
                     if (events.size() <= 4) {
+                        //bind only this events
                         for (int i = 0; i < events.size(); i++) {
                             mEventViews.get(i).setVisibility(View.VISIBLE);
                             mEventViews.get(i).setText(formatEvent(events.get(i).getTitle()));
                         }
                     } else {
+                        //binds first events 3
                         for (int i = 0; i < 3; i++) {
                             mEventViews.get(i).setVisibility(View.VISIBLE);
-                            mEventViews.get(i).setText(formatEvent(events.get(i).getTitle() ));
+                            mEventViews.get(i).setText(formatEvent(events.get(i).getTitle()));
                         }
+                        //on last show number of not showing events
                         mEventViews.get(3).setVisibility(View.VISIBLE);
                         mEventViews.get(3).setText(" +" + (events.size() - 3));
                     }
                 }
-                events = null;
-            }
-            strokeDrawable = null;
-            monthColorString = null;
-            thisMonthColor = null;
-            resources = null;
-            intPx = null;
         }
-    }
-    private boolean isToday(Calendar calendar){
-        if (calendar.get(Calendar.DAY_OF_YEAR) == Calendar.getInstance().get(Calendar.DAY_OF_YEAR) && calendar.get(Calendar.YEAR) == Calendar.getInstance().get(Calendar.YEAR)){
-            return true;
-        }
-        return false;
-    }
 
-    private String formatEvent (String eventTitle){
-        return String.format(getActivity().getResources().getString(R.string.format_event), eventTitle);
+        private void setStroke() {
+
+            Resources resources = getResources();
+            Integer strokeString = resources.getIdentifier("stroke_shape", "drawable", getActivity().getPackageName());
+            GradientDrawable strokeDrawable = (GradientDrawable) ContextCompat.getDrawable(getActivity(), strokeString);
+            String monthColorString = mMonthColorStrings.get(mCurrentMonth) + "_stroke";
+
+            //get stroke width
+            float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, resources.getDisplayMetrics());
+            Integer intPx = Math.round(px);
+            if (isToday(cloneCalendar)) {
+                intPx = intPx * 3;
+            }
+            //set stroke
+            strokeDrawable.setStroke(intPx, ContextCompat.getColor(getActivity(), getActivity().getResources().getIdentifier(monthColorString, "color", getActivity().getPackageName())));
+            mLinearLayout.setBackground(strokeDrawable);
+        }
+
+        private void setTextColors() {
+            String monthString = mMonthColorStrings.get(mCurrentMonth) + "_day_title";
+            String eventString = mMonthColorStrings.get(mCurrentMonth) + "_just_text";
+
+            Integer thisMonthColor = ContextCompat.getColor(getActivity(), getActivity().getResources().getIdentifier(monthString, "color", getActivity().getPackageName()));
+            Integer eventColor = ContextCompat.getColor(getActivity(), getActivity().getResources().getIdentifier(eventString, "color", getActivity().getPackageName()));
+
+            mDayName.setTextColor(thisMonthColor);
+            for (TextView event : mEventViews) {
+                event.setTextColor(eventColor);
+            }
+        }
     }
 
     ////////////////////////////             ADAPTER
@@ -210,7 +194,7 @@ public class WeekFragment extends Fragment {
     public class DayOfWeekRecyclerAdapter extends RecyclerView.Adapter<DayOfWeekViewHolder> {
 
         public DayOfWeekRecyclerAdapter() {
-            setDate();
+            setCalendar();
         }
 
         @Override
@@ -236,11 +220,6 @@ public class WeekFragment extends Fragment {
         }
     }
 
-    private void setDate() {
-        mCalendar = Calendar.getInstance();
-        mCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        mCalendar.add(Calendar.WEEK_OF_YEAR, mNumberOfFragment);
-    }
 
     @Override
     public void onDestroy() {
@@ -249,6 +228,57 @@ public class WeekFragment extends Fragment {
         mCalendar = null;
         mDaysStrings = null;
         mCurrentMonth = null;
+    }
+
+    ///////////////////////  HELPING METHODS
+
+    private void setCalendar() {
+        mCalendar = Calendar.getInstance();
+        mCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        mCalendar.add(Calendar.WEEK_OF_YEAR, mNumberOfFragment);
+        mCurrentMonth = mCalendar.get(Calendar.MONTH);
+    }
+
+    private void getData(final RecyclerView weekRecyclerView) {
+        new Thread(new Runnable() {
+            public void run() {
+                Calendar endOfWeek = Calendar.getInstance();
+                endOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+                endOfWeek.add(Calendar.WEEK_OF_YEAR, (mNumberOfFragment));
+                long begin = CalendarDataSource.getBeginInMillis(mCalendar);
+                long end = CalendarDataSource.getEndInMillis(endOfWeek);
+                CalendarDataSource readerEvents = new CalendarDataSource(getContext());
+                mWeek = new Week(readerEvents.getEvents(begin, end));
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            weekRecyclerView.setAdapter(new DayOfWeekRecyclerAdapter());
+                        }
+                    });
+                }
+            }
+        }).start();
+    }
+
+    private boolean isToday(Calendar calendar) {
+        if (calendar.get(Calendar.DAY_OF_YEAR) == Calendar.getInstance().get(Calendar.DAY_OF_YEAR) && calendar.get(Calendar.YEAR) == Calendar.getInstance().get(Calendar.YEAR)) {
+            return true;
+        }
+        return false;
+    }
+
+    private String formatEvent(String eventTitle) {
+        return String.format(getActivity().getResources().getString(R.string.format_event), eventTitle);
+    }
+
+    @NonNull
+    private Integer getGridSize() {
+        Integer gridSize = 2;
+        if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            gridSize = 3;
+        }
+        return gridSize;
     }
 }
 

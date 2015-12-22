@@ -3,14 +3,13 @@
               xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_marginBottom="@dimen/activity_vertical_margin"
+              android:layout_marginBottom="@dimen/activity_quarter_margin"
               android:layout_marginTop="@dimen/activity_quarter_margin"
               android:background="@drawable/day_stroke_shape"
               android:orientation="horizontal"
               android:paddingBottom="@dimen/activity_half_margin"
               android:paddingLeft="@dimen/activity_half_margin"
               android:paddingTop="@dimen/activity_half_margin">
-
 
     <LinearLayout
         android:layout_width="wrap_content"
