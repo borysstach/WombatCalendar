@@ -4,7 +4,7 @@
     android:initialLayout="@layout/widget_layout"
     android:minHeight="40dp"
     android:minWidth="220dp"
-    android:previewImage="@drawable/lapka_m"
-    android:resizeMode="horizontal|vertical"
+    android:previewImage="@drawable/widget_preview"
+    android:resizeMode="horizontal"
     android:updatePeriodMillis="3600000">
 </appwidget-provider>

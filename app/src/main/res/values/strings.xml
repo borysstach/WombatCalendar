@@ -22,6 +22,19 @@
     <string name="november">listopad</string>
     <string name="december">grudzień</string>
 
+    <string name="w_january">stycznia</string>
+    <string name="w_february">lutego</string>
+    <string name="w_march">marca</string>
+    <string name="w_april">kwietnia</string>
+    <string name="w_may">maja</string>
+    <string name="w_june">czerwca</string>
+    <string name="w_julay">lipca</string>
+    <string name="w_august">sierpnia</string>
+    <string name="w_september">września</string>
+    <string name="w_october">października</string>
+    <string name="w_november">listopada</string>
+    <string name="w_december">grudnia</string>
+
     <string name="p_january">styczen</string>
     <string name="p_february">luty</string>
     <string name="p_march">marzec</string>

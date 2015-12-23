@@ -45,6 +45,7 @@
         <item name="android:gravity">top</item>
         <item name="android:paddingTop">4dp</item>
         <item name="android:clickable">false</item>
+        <item name="android:includeFontPadding">false</item>
     </style>
 
     <style name="month_days_numbers">
@@ -76,6 +77,15 @@
         <item name="android:gravity">left</item>
         <item name="android:clickable">false</item>
         <item name="android:duplicateParentState">true</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:maxLines">2</item>
+    </style>
+
+    <style name="widget_kupka">
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:src">@drawable/kupka</item>
+        <item name="android:layout_marginBottom">@dimen/activity_quarter_margin</item>
+        <item name="android:layout_marginRight">@dimen/activity_quarter_margin</item>
         <item name="android:visibility">gone</item>
     </style>
 
