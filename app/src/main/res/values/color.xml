@@ -5,6 +5,7 @@
     <color name="day_title">#a03968</color>
     <color name="just_text">#212121</color>
     <color name="back">#F5F5F5</color>
+    <color name="transparent_back">#B3F5F5F5</color>
     <color name="stroke">#7b2854</color>
     <color name="my_primary_dark">#212121</color>
     <color name="my_primary_light">#B6B6B6</color>

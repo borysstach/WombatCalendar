@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+                android:padding="@dimen/activity_quarter_margin"
+    android:background="@drawable/transparent_shape">
+
+    <ImageView
+        android:id="@+id/widget_back_image"
+        android:src="@drawable/balagany"
+        android:scaleType="fitCenter"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/activity_quarter_margin"
+    android:background="@drawable/transparent_shape">
+    <TextView
+        android:text="30"
+        android:id="@+id/widget_day_month"
+        android:layout_width="wrap_content"
+        android:layout_height="33dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:textColor="@color/my_primary_dark"
+        android:textSize="32sp"
+        android:gravity="top"
+        android:includeFontPadding="false"
+        android:layout_marginRight="@dimen/activity_half_margin"/>
+    <TextView
+        android:text="grudnia"
+        android:id="@+id/widget_month"
+        android:textColor="@color/my_primary_dark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:layout_toRightOf="@id/widget_day_month"/>
+
+    <TextView
+        android:text="poniedziałek"
+        android:id="@+id/widget_day_week"
+        android:textColor="@color/my_primary_dark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/widget_day_month"
+        android:layout_toRightOf="@id/widget_day_month"/>
+
+    <ImageView
+        android:src="@drawable/lapka_m"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
+        android:id="@+id/imageButton"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignBottom="@id/widget_day_month"/>
+</RelativeLayout>
+</RelativeLayout>
