@@ -67,19 +67,21 @@ public class Widget extends AppWidgetProvider{
             views.setTextViewText(R.id.widget_day_week, "" + daysStrings.get(getDayOfWeek(calendar)));
             views.setTextViewText(R.id.widget_month, "" + monthStrings.get(calendar.get(Calendar.MONTH)));
 
+            List<Integer>mEventViews = new ArrayList<>();
+            mEventViews.add(R.id.widget_event_1);
+            mEventViews.add(R.id.widget_event_2);
+            mEventViews.add(R.id.widget_event_3);
+            mEventViews.add(R.id.widget_event_num);
+
+            List<Integer>ImageViews = new ArrayList<>();
+            ImageViews.add(R.id.widget_kupka_1);
+            ImageViews.add(R.id.widget_kupka_2);
+            ImageViews.add(R.id.widget_kupka_3);
+            ImageViews.add(R.id.widget_kupka_4);
+
             if (events.size() != 0){
                 views.setImageViewResource(R.id.widget_back_image, R.drawable.kupki);
-                List<Integer>mEventViews = new ArrayList<>();
-                mEventViews.add(R.id.widget_event_1);
-                mEventViews.add(R.id.widget_event_2);
-                mEventViews.add(R.id.widget_event_3);
-                mEventViews.add(R.id.widget_event_num);
 
-                List<Integer>ImageViews = new ArrayList<>();
-                ImageViews.add(R.id.widget_kupka_1);
-                ImageViews.add(R.id.widget_kupka_2);
-                ImageViews.add(R.id.widget_kupka_3);
-                ImageViews.add(R.id.widget_kupka_4);
 
                 if (events.size() <= 4) {
                     //bind only this events
@@ -96,6 +98,12 @@ public class Widget extends AppWidgetProvider{
                     //on last show number of not showing events
                     views.setTextViewText(mEventViews.get(3)," +" + (events.size() - 3));
                     views.setViewVisibility(ImageViews.get(3), View.VISIBLE);
+                }
+            } else {
+                views.setImageViewResource(R.id.widget_back_image, R.drawable.balagany);
+                for (int j = 0; j < 4; j++) {
+                    views.setTextViewText(mEventViews.get(j), "");
+                    views.setViewVisibility(ImageViews.get(j), View.GONE);
                 }
             }
             // Tell the AppWidgetManager to perform an update on the current app widget
