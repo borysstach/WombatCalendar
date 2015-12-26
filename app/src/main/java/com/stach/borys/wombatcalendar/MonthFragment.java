@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 public class MonthFragment extends Fragment {
 
@@ -295,6 +296,7 @@ public class MonthFragment extends Fragment {
 
     private Integer dayOfMonth(Event event){
         Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
         calendar.setTimeInMillis(event.getBegin());
         return calendar.get(Calendar.DAY_OF_MONTH) - 1;
     }

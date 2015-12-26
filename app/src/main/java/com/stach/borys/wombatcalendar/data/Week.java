@@ -4,6 +4,7 @@ package com.stach.borys.wombatcalendar.data;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 public class Week {
     private List<Event> mMonday;
@@ -17,6 +18,7 @@ public class Week {
     public Week(List<Event> events){
         Calendar tmpCalendar = Calendar.getInstance();
         for(Event event : events){
+            tmpCalendar.setTimeZone(TimeZone.getTimeZone("GMT"));
             tmpCalendar.setTimeInMillis(event.getBegin());
             switch (tmpCalendar.get(Calendar.DAY_OF_WEEK)){
                 case Calendar.MONDAY:

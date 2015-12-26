@@ -244,7 +244,7 @@ public class WeekFragment extends Fragment {
             public void run() {
                 Calendar endOfWeek = Calendar.getInstance();
                 endOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-                endOfWeek.add(Calendar.WEEK_OF_YEAR, (mNumberOfFragment));
+                endOfWeek.add(Calendar.WEEK_OF_YEAR, mNumberOfFragment);
                 long begin = CalendarDataSource.getBeginInMillis(mCalendar);
                 long end = CalendarDataSource.getEndInMillis(endOfWeek);
                 CalendarDataSource readerEvents = new CalendarDataSource(getContext());
