@@ -10,7 +10,6 @@ import com.stach.borys.wombatcalendar.WeekActivity;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 
 /**
  * help with takieng/putting data from Calendar Content Provider
@@ -40,7 +39,7 @@ public class CalendarDataSource {
 
         SharedPreferences settings = mContext.getSharedPreferences(WeekActivity.PREFS_NAME, 0);
         if (settings.getBoolean("permission", false)) {
-          Cursor cursor = Instances.query(mContext.getContentResolver(), instanceQuery, beginMillis, endMillis);
+            Cursor cursor = Instances.query(mContext.getContentResolver(), instanceQuery, beginMillis, endMillis);
             if (cursor != null) {
                 if (cursor.moveToFirst()) {
                     do {
@@ -63,16 +62,14 @@ public class CalendarDataSource {
         return allEvents;
     }
 
-    public static long getBeginInMillis (Calendar calendar) {
+    public static long getBeginInMillis(Calendar calendar) {
         Calendar beginCalendar = Calendar.getInstance();
-        beginCalendar.setTimeZone(TimeZone.getTimeZone("GMT"));
         beginCalendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), 0, 1);
         return beginCalendar.getTimeInMillis();
     }
 
     public static long getEndInMillis(Calendar calendar) {
         Calendar endCalendar = Calendar.getInstance();
-        endCalendar.setTimeZone(TimeZone.getTimeZone("GMT"));
         endCalendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), 23, 59);
         return endCalendar.getTimeInMillis();
     }

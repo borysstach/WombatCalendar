@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -59,7 +60,7 @@ public class Widget extends AppWidgetProvider{
             intent.putExtra("year", calendar.get(Calendar.YEAR));
             intent.putExtra("month", calendar.get(Calendar.MONTH));
             intent.putExtra("day", calendar.get(Calendar.DAY_OF_MONTH));
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
             views.setOnClickPendingIntent(R.id.widget_whole, pendingIntent);
@@ -79,24 +80,30 @@ public class Widget extends AppWidgetProvider{
             ImageViews.add(R.id.widget_kupka_3);
             ImageViews.add(R.id.widget_kupka_4);
 
+            Integer eventsOnWidget;
+            if (lowerThanHDPI(context)){
+                eventsOnWidget = 2;
+            }else {
+                eventsOnWidget = 4;
+            }
+
             if (events.size() != 0){
                 views.setImageViewResource(R.id.widget_back_image, R.drawable.kupki);
 
-
-                if (events.size() <= 4) {
+                if (events.size() <= eventsOnWidget) {
                     //bind only this events
                     for (int j = 0; j < events.size(); j++) {
                         views.setTextViewText(mEventViews.get(j), events.get(j).getTitle());
                         views.setViewVisibility(ImageViews.get(j), View.VISIBLE);
                     }
                 } else {
-                    //binds first events 3
-                    for (int j = 0; j < 3; j++) {
+                    //binds visible events
+                    for (int j = 0; j < eventsOnWidget - 1; j++) {
                         views.setTextViewText(mEventViews.get(j), events.get(j).getTitle());
                         views.setViewVisibility(ImageViews.get(j), View.VISIBLE);
                     }
                     //on last show number of not showing events
-                    views.setTextViewText(mEventViews.get(3)," +" + (events.size() - 3));
+                    views.setTextViewText(mEventViews.get(3)," +" + (events.size() - (eventsOnWidget - 1)));
                     views.setViewVisibility(ImageViews.get(3), View.VISIBLE);
                 }
             } else {
@@ -109,7 +116,12 @@ public class Widget extends AppWidgetProvider{
             // Tell the AppWidgetManager to perform an update on the current app widget
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }
+    }
 
+    private boolean lowerThanHDPI(Context context) {
+        float density =context.getResources().getDisplayMetrics().density;
+        Log.d("dens", density+"");
+        return  density < 1.5;
     }
 
     private Integer getDayOfWeek(Calendar calendar) {

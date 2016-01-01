@@ -24,11 +24,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 
 public class MonthFragment extends Fragment {
 
-    private Integer numberOfDays;
+    private Integer maxNumberOfDays;
     private Calendar mCalendar;
     private List<String> mMonthStrings;
     private List<String> mMonthColorStrings;
@@ -160,7 +159,7 @@ public class MonthFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return numberOfDays + getDayOfWeekFromFirstDayOfMonth(mCalendar);
+            return maxNumberOfDays + getDayOfWeekFromFirstDayOfMonth(mCalendar);
         }
 
         private boolean thisMonth(int position) {
@@ -173,7 +172,7 @@ public class MonthFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        numberOfDays = null;
+        maxNumberOfDays = null;
         mCalendar = null;
         mMonthStrings = null;
         mMonthColorStrings = null;
@@ -184,9 +183,9 @@ public class MonthFragment extends Fragment {
     ///////////////////////  HELPING METHODS
 
     private void setEventsModel() {
-        numberOfDays = mCalendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-        mEventsModel = new Boolean[numberOfDays];
-        for (int i = 0; i<numberOfDays;i++){
+        maxNumberOfDays = mCalendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        mEventsModel = new Boolean[maxNumberOfDays];
+        for (int i = 0; i< maxNumberOfDays;i++){
             mEventsModel[i] = false;
         }
     }
@@ -211,7 +210,7 @@ public class MonthFragment extends Fragment {
                 Calendar cloneCalendar = (Calendar) mCalendar.clone();
                 cloneCalendar.set(Calendar.DAY_OF_MONTH, 1);
                 long begin = CalendarDataSource.getBeginInMillis(cloneCalendar);
-                cloneCalendar.set(Calendar.DAY_OF_MONTH, numberOfDays);
+                cloneCalendar.set(Calendar.DAY_OF_MONTH, maxNumberOfDays);
                 long end = CalendarDataSource.getEndInMillis(cloneCalendar);
                 CalendarDataSource readerEvents = new CalendarDataSource(getContext());
                 List<Event> WholeMonthEvents = readerEvents.getEvents(begin, end);
@@ -290,15 +289,22 @@ public class MonthFragment extends Fragment {
 
     private void setEventsArray(List<Event> events){
         for(Event event : events){
-            mEventsModel[dayOfMonth(event)] = true ;
+            if(!thisDay(event))
+                continue;
+            if(dayOfMonth(event)< maxNumberOfDays)
+                mEventsModel[dayOfMonth(event)] = true ;
         }
     }
 
     private Integer dayOfMonth(Event event){
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
         calendar.setTimeInMillis(event.getBegin());
         return calendar.get(Calendar.DAY_OF_MONTH) - 1;
     }
 
+    private boolean thisDay(Event event){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(event.getBegin());
+        return calendar.get(Calendar.MONTH) == mCalendar.get(Calendar.MONTH) ;
+    }
 }

@@ -89,6 +89,11 @@
         <item name="android:visibility">gone</item>
     </style>
 
+    <style name="widget_event">
+        <item name="android:maxLines">1</item>
+        <item name="android:textColor">@color/my_primary_dark</item>
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>

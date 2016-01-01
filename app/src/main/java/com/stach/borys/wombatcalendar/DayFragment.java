@@ -20,7 +20,6 @@ import com.stach.borys.wombatcalendar.data.SortEvent;
 
 import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 
 public class DayFragment extends Fragment {
 
@@ -49,7 +48,7 @@ public class DayFragment extends Fragment {
         setCalendar();
         List<Event> todayEvents = getEventDatas();
         SortEvent sort = new SortEvent();
-        mSortedEvents = sort.sortEvents(todayEvents);
+        mSortedEvents = sort.sortEvents(todayEvents, mCalendar);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -194,7 +193,7 @@ public class DayFragment extends Fragment {
 
     private void setCalendar() {
         mCalendar = Calendar.getInstance();
-        mCalendar.setTimeZone(TimeZone.getTimeZone("GMT"));
+        //mCalendar.setTimeZone(TimeZone.getTimeZone("GMT"));
         Integer year = getArguments().getInt(YEAR_BUNDLE);
         Integer month = getArguments().getInt(MONTH_BUNDLE);
         Integer day = getArguments().getInt(DAY_BUNDLE);

@@ -3,6 +3,7 @@ package com.stach.borys.wombatcalendar.data;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class SortEvent {
@@ -14,9 +15,11 @@ public class SortEvent {
 
     List<Event> mSortedEvents = new ArrayList<>();
 
-    public List<Event> sortEvents(List<Event> unsortedEvents){
+    public List<Event> sortEvents(List<Event> unsortedEvents, Calendar fromDay){
         mSortedEvents.add(Event.standardEventData(FREE_DAY));
         for(Event event : unsortedEvents){
+            if(!thisDay(event, fromDay))
+                continue;
             if (event.isAllDay()) {
                 removeFreeDayEvent();
                 //put it on top
@@ -107,5 +110,11 @@ public class SortEvent {
             return "0"+ min;
         }
         return ""+min;
+    }
+
+    private boolean thisDay(Event event, Calendar thisDay){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(event.getBegin());;
+        return calendar.get(Calendar.DAY_OF_MONTH) == thisDay.get(Calendar.DAY_OF_MONTH) ;
     }
 }

@@ -66,7 +66,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/widget_upper"
         android:layout_marginRight="40dp"
@@ -94,8 +94,7 @@
                     android:id="@+id/widget_event_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/my_primary_dark"
-                    android:maxLines="2"/>
+                    style="@style/widget_event"/>
             </LinearLayout>
 
             <LinearLayout
@@ -113,8 +112,7 @@
                     android:id="@+id/widget_event_3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/my_primary_dark"
-                    android:maxLines="2"/>
+                    style="@style/widget_event"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -137,9 +135,9 @@
 
                 <TextView
                     android:id="@+id/widget_event_2"
+                    style="@style/widget_event"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/my_primary_dark"/>
+                    android:layout_height="wrap_content"/>
             </LinearLayout>
 
             <LinearLayout
@@ -155,9 +153,9 @@
 
                 <TextView
                     android:id="@+id/widget_event_num"
+                    style="@style/widget_event"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/my_primary_dark"/>
+                    android:layout_height="wrap_content"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
