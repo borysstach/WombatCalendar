@@ -53,14 +53,20 @@ public class Widget extends AppWidgetProvider{
             CalendarDataSource readerEvents = new CalendarDataSource(context);
             long begin = CalendarDataSource.getBeginInMillis(calendar);
             long end = CalendarDataSource.getEndInMillis(calendar);
-            List<Event> events = readerEvents.getEvents(begin, end);
+            List<Event> rawEvents = readerEvents.getEvents(begin, end);
+            //check if its from today
+            List<Event> events = new ArrayList<>();
+            for (Event oneEvent : rawEvents){
+                if(thisDay(oneEvent))
+                    events.add(oneEvent);
+            }
 
             // Create an Intent to launch DayActivity from today
             Intent intent = new Intent(context, DayActivity.class);
             intent.putExtra("year", calendar.get(Calendar.YEAR));
             intent.putExtra("month", calendar.get(Calendar.MONTH));
             intent.putExtra("day", calendar.get(Calendar.DAY_OF_MONTH));
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
             views.setOnClickPendingIntent(R.id.widget_whole, pendingIntent);
@@ -120,7 +126,7 @@ public class Widget extends AppWidgetProvider{
 
     private boolean lowerThanHDPI(Context context) {
         float density =context.getResources().getDisplayMetrics().density;
-        Log.d("dens", density+"");
+        Log.d("dens", density + "");
         return  density < 1.5;
     }
 
@@ -144,4 +150,13 @@ public class Widget extends AppWidgetProvider{
                 return 0;
         }
     }
+
+    private boolean thisDay(Event event){
+        Calendar tmpCalendar = Calendar.getInstance();
+        tmpCalendar.setTimeInMillis(event.getBegin());
+        Calendar today = Calendar.getInstance();
+        return tmpCalendar.get(Calendar.DAY_OF_MONTH) == today.get(Calendar.DAY_OF_MONTH) ;
+    }
+
+
 }
